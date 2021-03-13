@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "785495160839",
+    "project_id": "my-tour-guide-d8fdf",
+    "storage_bucket": "my-tour-guide-d8fdf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:785495160839:android:44fd666b987ce3084612a2",
+        "android_client_info": {
+          "package_name": "com.unipi.p17050.mytourguide"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "785495160839-145qu8hafgrp7ald1q3qggb1b319tqnq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkddBKkvye4_QiY1CdgvB3nMa4PRxkQ5I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "785495160839-145qu8hafgrp7ald1q3qggb1b319tqnq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
