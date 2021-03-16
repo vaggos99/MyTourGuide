@@ -3,4 +3,5 @@
     <string name="facebook_app_id">1616969582026440</string>
     <string name="fb_login_protocol_scheme">fb1616969582026440</string>
     <string name="google_login">Sign in with Google</string>
+    <string name="logout">Log out</string>
 </resources>
