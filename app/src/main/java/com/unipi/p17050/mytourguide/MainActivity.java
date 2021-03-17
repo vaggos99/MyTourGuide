@@ -37,11 +37,7 @@ public class MainActivity extends AppCompatActivity {
         if(user ==null){
             logout();
         }
-        else {
-            TextView t=findViewById(R.id.hello_world);
-            t.setText(user.getDisplayName());
 
-        }
 
     }
 
