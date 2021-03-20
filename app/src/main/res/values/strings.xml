@@ -2,11 +2,16 @@
     <string name="app_name">My Tour Guide</string>
     <string name="facebook_app_id">1616969582026440</string>
     <string name="fb_login_protocol_scheme">fb1616969582026440</string>
+
     <string name="google_login">Sign in with Google</string>
     <string name="logout">Log out</string>
     <string name="profile">Profile</string>
     <string name="start">Start</string>
     <string name="map">Map</string>
+    <string name="error_map">You can\'t make map requests</string>
+    <string name="search_place">Search a place</string>
+    <string name="google_api" translatable="false">AIzaSyAgxuI0TDOkNf0WurR3Rsqzn6Hxz0s87lo</string>
+    <string name="gps_perrmissions">Enable gps usage to find your location</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
