@@ -31,7 +31,7 @@ import com.google.firebase.auth.FirebaseUser;
 import java.security.PublicKey;
 
 public class MainActivity extends AppCompatActivity {
-    MapFragment mapFragment;
+
     private FirebaseAuth mAuth;
     private SharedPreferences sharedPreferences;
     private BottomNavigationView bnv;
@@ -115,8 +115,8 @@ public  boolean isServicesOk(){
                     break;
                 case R.id.map:
                     if (isServicesOk()) {
-                        mapFragment = new MapFragment();
-                        selectedFragment=mapFragment;
+
+                        selectedFragment=new MapFragment();
                     }
                     break;
             }

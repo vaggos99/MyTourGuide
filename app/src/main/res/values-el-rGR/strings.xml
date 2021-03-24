@@ -4,7 +4,9 @@
     <string name="app_name">My Tour Guide</string>
     <string name="facebook_app_id">1616969582026440</string>
     <string name="fb_login_protocol_scheme">fb1616969582026440</string>
-
+    <string name="terrain">Έδαφος</string>
+    <string name="hybrid">Δορυφόρος</string>
+    <string name="normal">Προεπιλογή</string>
     <string name="google_login">Συνδέσου με Google</string>
     <string name="logout">Αποσύνδεση</string>
     <string name="profile">Προφίλ</string>

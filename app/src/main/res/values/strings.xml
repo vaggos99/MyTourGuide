@@ -7,6 +7,9 @@
     <string name="logout">Log out</string>
     <string name="profile">Profile</string>
     <string name="start">Start</string>
+    <string name="terrain">Terrain</string>
+    <string name="hybrid">Hybrid</string>
+    <string name="normal">Normal</string>
     <string name="map">Map</string>
     <string name="error_map">You can\'t make map requests</string>
     <string name="search_place">Search a place</string>

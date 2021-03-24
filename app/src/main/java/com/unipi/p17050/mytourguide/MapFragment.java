@@ -16,16 +16,24 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
+import androidx.core.view.GravityCompat;
+import androidx.core.view.MenuItemCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.common.api.ApiException;
@@ -39,6 +47,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.SettingsClient;
+
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -54,15 +63,20 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.AutocompletePrediction;
 import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
+import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.TypeFilter;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.FetchPlaceResponse;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.mancj.materialsearchbar.MaterialSearchBar;
-import com.mancj.materialsearchbar.adapter.SuggestionsAdapter;
+
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -73,7 +87,7 @@ import static android.app.Activity.RESULT_OK;
 import static android.content.Context.INPUT_METHOD_SERVICE;
 import static com.google.android.libraries.places.api.model.TypeFilter.*;
 
-public class MapFragment extends Fragment implements   OnMapReadyCallback  {
+public class MapFragment extends Fragment implements   OnMapReadyCallback ,NavigationView.OnNavigationItemSelectedListener {
 
    private View view;
 
@@ -81,15 +95,19 @@ public class MapFragment extends Fragment implements   OnMapReadyCallback  {
     private static final String TAG = MapFragment.class.getName();
     private static final float DEFAULT_ZOOM=15f;
     private boolean mLocationPermissionGranted=false;
-    private List<AutocompletePrediction> predictionList;
+
     private SupportMapFragment supportMapFragment;
     private GoogleMap mMap;
+
+
     private  FusedLocationProviderClient mFusedclient;
-private PlacesClient placesClient;
+private NavigationView navigationView;
     private Location mLastKnownLocation;
     private  LocationCallback mLocationCallback;
-    private SearchView searchView;
+    private    MaterialSearchBar materialSearchBar;
     private View mapView;
+    private DrawerLayout navDrawer;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -97,46 +115,14 @@ private PlacesClient placesClient;
         // Inflate the layout for this fragment
          view = inflater.inflate(R.layout.fragment_map, container, false);
         getLocationPermission();
-
         initMap();
-
         mapView=supportMapFragment.getView();
         mFusedclient=LocationServices.getFusedLocationProviderClient(getActivity());
-        Places.initialize(getContext(), getString(R.string.google_api));
-        placesClient = Places.createClient(getContext());
-        final AutocompleteSessionToken token = AutocompleteSessionToken.newInstance();
-
-
-        searchView=view.findViewById(R.id.sv_location);
-       searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-           @Override
-           public boolean onQueryTextSubmit(String query) {
-               String location =searchView.getQuery().toString();
-               List<Address> addressList=null;
-                if(location !=null || !location.equals("")){
-                    Geocoder geocoder=new Geocoder(getContext());
-                    try {
-                        addressList=geocoder.getFromLocationName(location,1);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    Address address=addressList.get(0);
-                    LatLng latLng=new LatLng(address.getLatitude(),address.getLongitude());
-                    mMap.addMarker(new MarkerOptions().position(latLng).title(location));
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,DEFAULT_ZOOM));
-                }
-return false;
-           }
-
-           @Override
-           public boolean onQueryTextChange(String newText) {
-               return false;
-           }
-       });
-
-
-
-
+         materialSearchBar = view.findViewById(R.id.searchBar);
+         navDrawer = view.findViewById(R.id.drawer);
+         navigationView=view.findViewById(R.id.navigation);
+        navigationView.setNavigationItemSelectedListener(this);
+        search();
 
         return view;
 
@@ -293,6 +279,75 @@ mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,zoom));
                         requestPermissions( permissions, LOCATION_PERMISSION_REQUEST_CODE);
                     }
                 }).show();
+    }
+
+    private void search(){
+        materialSearchBar.setOnSearchActionListener(new MaterialSearchBar.OnSearchActionListener() {
+            @Override
+            public void onSearchStateChanged(boolean enabled) {
+
+            }
+
+            @Override
+            public void onSearchConfirmed(CharSequence text) {
+                String location =  text.toString();
+                List<Address> addressList=null;
+                if(location !=null || !location.equals("")){
+                    Geocoder geocoder=new Geocoder(getContext());
+                    try {
+                        addressList=geocoder.getFromLocationName(location,1);
+                        Address address=addressList.get(0);
+                        LatLng latLng=new LatLng(address.getLatitude(),address.getLongitude());
+                        mMap.addMarker(new MarkerOptions().position(latLng).title(location));
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,DEFAULT_ZOOM));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }catch (IndexOutOfBoundsException e){
+                        Toast.makeText(getContext(),"Zero results",Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            }
+
+            @SuppressLint("WrongConstant")
+            @Override
+            public void onButtonClicked(int buttonCode) {
+                if (buttonCode == MaterialSearchBar.BUTTON_NAVIGATION) {
+
+                    // If the navigation drawer is not open then open it, if its already open then close it.
+                    if(!navDrawer.isDrawerOpen(Gravity.START)) navDrawer.openDrawer(Gravity.START);
+                    else navDrawer.closeDrawer(Gravity.END);
+
+                } else if (buttonCode == MaterialSearchBar.BUTTON_BACK) {
+                    materialSearchBar.disableSearch();
+
+                }
+            }
+        });
+    }
+
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        // Handle navigation view item clicks here.
+        switch (item.getItemId()){
+
+            case R.id.normal:
+                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                break;
+            case R.id.hybrid:
+                mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                break;
+            case R.id.terrain:
+                mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+                break;
+            default:
+                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                break;
+        }
+        //close navigation drawer
+        navDrawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }
 
