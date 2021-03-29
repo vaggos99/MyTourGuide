@@ -16,4 +16,6 @@
     <string name="gps_perrmissions">Ενεργοποιείστε την άδεια χρήσης GPS για την εύρεση της τοποθεσίας σας</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="search_place">Αναζήτησε ένα μέρος</string>
+    <string name="Temple_of_Hephaestus">Ναοός του Ηφαίστου</string>
+    <string name="interests">Ενδιαφέροντα</string>
 </resources>

@@ -298,6 +298,7 @@ mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,zoom));
                         addressList=geocoder.getFromLocationName(location,1);
                         Address address=addressList.get(0);
                         LatLng latLng=new LatLng(address.getLatitude(),address.getLongitude());
+                        System.out.println(address.getLatitude()+" "+address.getLongitude());
                         mMap.addMarker(new MarkerOptions().position(latLng).title(location));
                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,DEFAULT_ZOOM));
                     } catch (IOException e) {

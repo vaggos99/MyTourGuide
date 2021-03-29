@@ -17,4 +17,7 @@
     <string name="gps_perrmissions">Enable gps usage to find your location</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="Temple_of_Hephaestus">Temple of Hephaestus</string>
+    <string name="interests">Interests</string>
+
 </resources>
