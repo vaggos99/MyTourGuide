@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="InterestButton" parent="Widget.MaterialComponents.Button.OutlinedButton.Icon">
+        <item name="android:textColor">@color/button_text_color</item>
+        <item name="android:backgroundTint">@color/button_background_color</item>
+    </style>
+</resources>

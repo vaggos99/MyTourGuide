@@ -37,7 +37,9 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bnv;
     private static final String TAG = "MainActivity";
     private  static  final  int ERROR_DIALOG_REQUEST=9001;
-
+    private static final String FRAGMENT_NUM="fragment_num";
+    private int fr_num;
+    private FirebaseUser user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,14 +47,21 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         bnv=findViewById(R.id.bottom_navigation);
         bnv.setOnNavigationItemSelectedListener(navListener);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new ProfileFragment()).commit();
+        if (savedInstanceState != null) {
+            fr_num = savedInstanceState.getInt(FRAGMENT_NUM, R.id.profile);
+            setFragment(fr_num);
+        } else {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new ProfileFragment()).commit();
+            fr_num=R.id.profile;
+        }
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        mAuth=FirebaseAuth.getInstance();
-        FirebaseUser user = mAuth.getCurrentUser();
+
+        user= FirebaseAuth.getInstance().getCurrentUser();
         if(user ==null){
             logout();
         }
@@ -75,7 +84,12 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(FRAGMENT_NUM, fr_num);
 
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -105,25 +119,31 @@ public  boolean isServicesOk(){
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            Fragment selectedFragment=null;
-            switch(item.getItemId()){
-                case R.id.profile:
-                    selectedFragment=new ProfileFragment();
-                    break;
-                case R.id.start:
-                    selectedFragment=new GuideFragment();
-                    break;
-                case R.id.map:
-                    if (isServicesOk()) {
-
-                        selectedFragment=new MapFragment();
-                    }
-                    break;
-            }
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,selectedFragment).commit();
+            setFragment(item.getItemId());
             return true;
         }
     };
+
+    private void setFragment(int id){
+        Fragment selectedFragment=null;
+        switch(id){
+            case R.id.profile:
+                selectedFragment=new ProfileFragment();
+                break;
+            case R.id.start:
+                selectedFragment=new GuideFragment();
+                break;
+            case R.id.map:
+                if (isServicesOk()) {
+
+                    selectedFragment=new MapFragment();
+                }
+                break;
+
+        }
+        fr_num=id;
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,selectedFragment).commit();
+    }
     private void logout(){
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         startActivity(intent);

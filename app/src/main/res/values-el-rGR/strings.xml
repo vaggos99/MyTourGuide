@@ -18,4 +18,12 @@
     <string name="search_place">Αναζήτησε ένα μέρος</string>
     <string name="Temple_of_Hephaestus">Ναοός του Ηφαίστου</string>
     <string name="interests">Ενδιαφέροντα</string>
+    <string name="accessibility">Προσβσασιμότητα</string>
+    <string name="Culture">Πολιτισμός</string>
+    <string name="Strolling">Βόλτα</string>
+    <string name="Sport">Άθληση</string>
+    <string name="Religion">Θρησκεία</string>
+    <string name="accessibility_infos">1- Μέρη ευκόλως προσβάσιμα.Ιδανικά για οικογένιες με μωρά ή για άτομα με κινητικά προβλήματα.\n2-
+        Μέρη που μπορεί να περιέχουν δύσβατο έδαφος όπως βράχια και στενά μονοπάτια.\n3- Μέρη δύσβατα .Ιδανικά για φυσική άσκηση.</string>
+    <string name="infos">Πληροφορίες</string>
 </resources>
