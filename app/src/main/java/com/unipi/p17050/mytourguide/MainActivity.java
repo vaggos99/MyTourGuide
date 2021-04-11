@@ -38,6 +38,10 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private  static  final  int ERROR_DIALOG_REQUEST=9001;
     private static final String FRAGMENT_NUM="fragment_num";
+    private static final ProfileFragment pf=new ProfileFragment();
+    private static final GuideFragment gf=new GuideFragment();
+    private static final MapFragment mf=new MapFragment();
+    private Fragment selectedFragment;
     private int fr_num;
     private FirebaseUser user;
     @Override
@@ -51,7 +55,11 @@ public class MainActivity extends AppCompatActivity {
             fr_num = savedInstanceState.getInt(FRAGMENT_NUM, R.id.profile);
             setFragment(fr_num);
         } else {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new ProfileFragment()).commit();
+
+            getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, mf, "3").hide(mf).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, gf, "2").hide(gf).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.fragment_container,pf, "1").commit();
+            selectedFragment=pf;
             fr_num=R.id.profile;
         }
 
@@ -125,24 +133,25 @@ public  boolean isServicesOk(){
     };
 
     private void setFragment(int id){
-        Fragment selectedFragment=null;
+
         switch(id){
             case R.id.profile:
-                selectedFragment=new ProfileFragment();
+                getSupportFragmentManager().beginTransaction().hide(selectedFragment).show(pf).commit();
+                selectedFragment=pf;
                 break;
             case R.id.start:
-                selectedFragment=new GuideFragment();
+                getSupportFragmentManager().beginTransaction().hide(selectedFragment).show(gf).commit();
+                selectedFragment=gf;
                 break;
             case R.id.map:
                 if (isServicesOk()) {
-
-                    selectedFragment=new MapFragment();
+                    getSupportFragmentManager().beginTransaction().hide(selectedFragment).show(mf).commit();
+                    selectedFragment=mf;
                 }
                 break;
 
         }
         fr_num=id;
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,selectedFragment).commit();
     }
     private void logout(){
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
