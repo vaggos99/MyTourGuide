@@ -9,14 +9,14 @@ import java.util.List;
 import java.util.Set;
 
 public class Jaccard {
-    public float calculate(Profile profile, Destination destination)
+    public static float calculate(Profile profile, Destination destination)
     {
 
         ArrayList<String> union= (ArrayList<String>) getUnionOfLists(profile.getInterests(),destination.getCategory());
         ArrayList<String> intersect= (ArrayList<String>) getIntersectOfLists(profile.getInterests(),destination.getCategory());
-        return union.size()/intersect.size();
+        return intersect.size()/union.size();
     }
-    private List<String> getUnionOfLists(List<String> list1, List<String> list2) {
+    private static List<String> getUnionOfLists(List<String> list1, List<String> list2) {
 
         Set<String> set = new HashSet<>();
         set.addAll(list1);

@@ -1,14 +1,43 @@
 package com.unipi.p17050.mytourguide.Models;
 
+import android.location.Location;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 
 public class Destination {
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     private String type;
     private ArrayList<String> category;
     private int accessibility;
-    private LatLng location;
+    private float latitude ;
+    private float longitude ;
+
+    public float getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(float latitude) {
+        this.latitude = latitude;
+    }
+
+    public float getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(float longitude) {
+        this.longitude = longitude;
+    }
 
     public String getType() {
         return type;
@@ -34,11 +63,5 @@ public class Destination {
         this.accessibility = accessibility;
     }
 
-    public LatLng getLocation() {
-        return location;
-    }
 
-    public void setLocation(LatLng location) {
-        this.location = location;
-    }
 }
