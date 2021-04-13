@@ -63,6 +63,7 @@ showMessage(getString(R.string.infos),getString(R.string.accessibility_infos));
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if(snapshot.getValue(Profile.class)!=null) {
                         profile = snapshot.getValue(Profile.class);
+                        ((MainActivity)getActivity()).setProfile(profile);
                         for (String interest:profile.getInterests()){
                             switch (interest){
                                 case "culture":
@@ -136,6 +137,7 @@ showMessage(getString(R.string.infos),getString(R.string.accessibility_infos));
                     button.setSelected(true);
                     profile.addInterest(value);
                 }
+                ((MainActivity)getActivity()).setProfile(profile);
                 mDatabase.child("Profiles").child(user.getUid()).child("interests").setValue(profile.getInterests());
             }
         });

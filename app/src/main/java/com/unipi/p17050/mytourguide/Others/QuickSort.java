@@ -6,26 +6,25 @@ import java.util.ArrayList;
 
 public class QuickSort {
     private ArrayList<Destination> dest;
-    private ArrayList<Float> scores;
+    private ArrayList<Double> scores;
 
-    public QuickSort(ArrayList<Destination> dest, ArrayList<Float> scores) {
+    public QuickSort(ArrayList<Destination> dest, ArrayList<Double> scores) {
         this.dest = dest;
         this.scores = scores;
     }
     public ArrayList<Destination> startQuicksort(){
         quicksort(0,scores.size()-1);
-        for(float k :scores){
-            System.out.println(k);
-        }
+
+
         return dest;
     }
     private  int partition(int p, int q) {
-        float x =scores.get(p);
+        double x =scores.get(p);
         int i=p;
         for(int j=p+1;j<=q;j++) {
-            if(scores.get(j)<=x) {
+            if(scores.get(j)>=x) {
                 i++;
-                float temp=scores.get(i);
+                double temp=scores.get(i);
                 scores.set(i,scores.get(j));
                 scores.set(j,temp);
                 Destination temp1=dest.get(i);
@@ -34,7 +33,7 @@ public class QuickSort {
             }
 
         }
-        float temp=scores.get(p);
+        double temp=scores.get(p);
         scores.set(p,scores.get(i));
         scores.set(i,temp);
         Destination temp1=dest.get(p);

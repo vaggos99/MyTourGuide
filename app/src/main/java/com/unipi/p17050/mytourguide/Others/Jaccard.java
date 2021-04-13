@@ -9,24 +9,29 @@ import java.util.List;
 import java.util.Set;
 
 public class Jaccard {
-    public static float calculate(Profile profile, Destination destination)
+    public static double calculate(Profile profile, Destination destination)
     {
+        ArrayList profile_interests=new ArrayList(profile.getInterests());
+        ArrayList destination_interests=new ArrayList(destination.getCategory());
 
-        ArrayList<String> union= (ArrayList<String>) getUnionOfLists(profile.getInterests(),destination.getCategory());
-        ArrayList<String> intersect= (ArrayList<String>) getIntersectOfLists(profile.getInterests(),destination.getCategory());
-        return intersect.size()/union.size();
+        double union= getUnionOfLists(profile_interests,destination_interests);
+        double intersect=  getIntersectOfLists(profile_interests,destination_interests);
+
+        return intersect/union;
     }
-    private static List<String> getUnionOfLists(List<String> list1, List<String> list2) {
+    private static double getUnionOfLists(List<String> list1, List<String> list2) {
 
         Set<String> set = new HashSet<>();
         set.addAll(list1);
         set.addAll(list2);
 
-        return new ArrayList<>(set);
+        return new ArrayList<>(set).size();
     }
-    private static List<String> getIntersectOfLists(List<String> list1, List<String> list2) {
+    private static double getIntersectOfLists(List<String> list1, List<String> list2) {
+
+
         list1.retainAll(list2);
 
-        return list1;
+        return list1.size();
     }
 }

@@ -9,6 +9,13 @@ import java.util.ArrayList;
 public class Destination {
     private String name;
 
+
+
+    private String type;
+    private ArrayList<String> category;
+    private int accessibility;
+    private float latitude ;
+    private float longitude ;
     public String getName() {
         return name;
     }
@@ -16,13 +23,6 @@ public class Destination {
     public void setName(String name) {
         this.name = name;
     }
-
-    private String type;
-    private ArrayList<String> category;
-    private int accessibility;
-    private float latitude ;
-    private float longitude ;
-
     public float getLatitude() {
         return latitude;
     }

@@ -27,6 +27,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.unipi.p17050.mytourguide.Models.Profile;
 
 import java.security.PublicKey;
 
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private static final GuideFragment gf=new GuideFragment();
     private static final MapFragment mf=new MapFragment();
     private Fragment selectedFragment;
+    private  Profile profile;
     private int fr_num;
     private FirebaseUser user;
     @Override
@@ -64,7 +66,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+public  void setProfile(Profile profile){
+      this.profile=profile;
+}
 
+public Profile getProfile(){
+        return profile;
+}
     @Override
     protected void onStart() {
         super.onStart();
@@ -153,6 +161,8 @@ public  boolean isServicesOk(){
         }
         fr_num=id;
     }
+
+
     private void logout(){
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         startActivity(intent);

@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,11 +35,10 @@ public class GuideFragment extends Fragment {
    private static final String CLICKED="clicked";
    private FloatingActionButton startButton;
    private RecyclerView destinationsRV;
-    private FirebaseUser user;
-
    private boolean clicked;
    private View view;
    private DatabaseReference mDatabase;
+   private  ArrayList <Destination>  destinations=new ArrayList<>();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -48,7 +48,6 @@ public class GuideFragment extends Fragment {
         destinationsRV=view.findViewById(R.id.destinationsRV);
         if (savedInstanceState != null) {
             clicked = savedInstanceState.getBoolean(CLICKED, false);
-            System.out.println(clicked);
         } else {
 
             clicked=false;
@@ -72,12 +71,14 @@ public class GuideFragment extends Fragment {
             public void onClick(View v) {
                 if( startButton.isSelected()) {
                     clicked=false;
-
+                    destinations.clear();
+                    setUpAdapter(destinations);
                 }
                 else {
                     addDataToRV();
                     clicked=true;
                 }
+
                 startButton.setSelected(clicked);
 
 
@@ -85,46 +86,38 @@ public class GuideFragment extends Fragment {
         });
     }
     private void addDataToRV(){
-        final Profile[] profile = {new Profile()};
-        user= FirebaseAuth.getInstance().getCurrentUser();
-        mDatabase.child("Profiles").child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                profile[0] = snapshot.getValue(Profile.class);
+        final Profile profile =  ((MainActivity)getActivity()).getProfile();
+        if(profile==null){
+            Toast.makeText(getContext(),getString(R.string.Setup_profile),Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-        final ArrayList<Float> scores=new ArrayList<>();
-         final ArrayList <Destination>  destinations=new ArrayList<>();
 
         mDatabase.child("destinations").addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Log.d("TAG","fetching destinations");
+                 ArrayList<Double> scores=new ArrayList<>();
+
+
                 for(DataSnapshot dataSnapshot:snapshot.getChildren()){
                     Destination destination=dataSnapshot.getValue(Destination.class);
 
-                   for(int accessiblity: profile[0].getAccessibility()){
-                       if(accessiblity==destination.getAccessibility()){
-                           Log.d("asdasd","asdasd");
-                          scores.add(Jaccard.calculate(profile[0],destination));
+
+                       if(profile.getAccessibility().contains(destination.getAccessibility())){
+
+                          scores.add(Jaccard.calculate(profile,destination));
+
                           destinations.add(destination);
-                          break;
-                       }
+
                    }
 
                 }
+                System.out.println(scores);
                 QuickSort quickSort=new QuickSort(destinations,scores);
-                DestinationsRecyclerViewAdapter adapter=new DestinationsRecyclerViewAdapter();
-                adapter.setDestinations(quickSort.startQuicksort());
-                destinationsRV.setAdapter(adapter);
-                destinationsRV.setLayoutManager(new LinearLayoutManager(getContext()));
+                destinations=  quickSort.startQuicksort();
+                setUpAdapter(destinations);
             }
 
             @Override
@@ -132,9 +125,16 @@ public class GuideFragment extends Fragment {
 
             }
         });
-        System.out.println(destinations);
 
 
     }
+
+
+private void setUpAdapter(ArrayList<Destination> dest){
+    DestinationsRecyclerViewAdapter adapter=new DestinationsRecyclerViewAdapter();
+    adapter.setDestinations(dest);
+    destinationsRV.setAdapter(adapter);
+    destinationsRV.setLayoutManager(new LinearLayoutManager(getContext()));
+}
 
 }
