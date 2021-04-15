@@ -9,6 +9,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
@@ -39,30 +40,42 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private  static  final  int ERROR_DIALOG_REQUEST=9001;
     private static final String FRAGMENT_NUM="fragment_num";
-    private static final ProfileFragment pf=new ProfileFragment();
-    private static final GuideFragment gf=new GuideFragment();
-    private static final MapFragment mf=new MapFragment();
+    private   ProfileFragment pf;
+    private   GuideFragment gf;
+    private   MapFragment mf;
     private Fragment selectedFragment;
     private  Profile profile;
     private int fr_num;
-    private FirebaseUser user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         bnv=findViewById(R.id.bottom_navigation);
         bnv.setOnNavigationItemSelectedListener(navListener);
+
+
+
         if (savedInstanceState != null) {
             fr_num = savedInstanceState.getInt(FRAGMENT_NUM, R.id.profile);
-            setFragment(fr_num);
+            selectedFragment = getSupportFragmentManager().findFragmentByTag(String.valueOf(fr_num));
+          pf= (ProfileFragment) getSupportFragmentManager().findFragmentByTag(String.valueOf(R.id.profile));
+          gf=(GuideFragment) getSupportFragmentManager().findFragmentByTag(String.valueOf(R.id.start));
+            mf=(MapFragment) getSupportFragmentManager().findFragmentByTag(String.valueOf(R.id.map));
+            //setFragment(fr_num);
         } else {
-
-            getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, mf, "3").hide(mf).commit();
-            getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, gf, "2").hide(gf).commit();
-            getSupportFragmentManager().beginTransaction().add(R.id.fragment_container,pf, "1").commit();
-            selectedFragment=pf;
             fr_num=R.id.profile;
+            pf=new ProfileFragment();
+            gf=new GuideFragment();
+            mf=new MapFragment();
+           // getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,selectedFragment,String.valueOf(fr_num)).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, mf, String.valueOf(R.id.map)).hide(mf).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, gf, String.valueOf(R.id.start)).hide(gf).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.fragment_container,pf, String.valueOf(fr_num)).commit();
+            selectedFragment=pf;
+
         }
 
     }
@@ -76,7 +89,7 @@ public Profile getProfile(){
     @Override
     protected void onStart() {
         super.onStart();
-
+        FirebaseUser user;
         user= FirebaseAuth.getInstance().getCurrentUser();
         if(user ==null){
             logout();

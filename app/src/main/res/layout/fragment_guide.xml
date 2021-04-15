@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/guideFragment"
     tools:context=".GuideFragment"
     >
 
@@ -12,7 +13,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:id="@+id/g_constraint_id">
 
 <androidx.recyclerview.widget.RecyclerView
     android:id="@+id/destinationsRV"

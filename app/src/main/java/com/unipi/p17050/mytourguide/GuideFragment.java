@@ -114,7 +114,7 @@ public class GuideFragment extends Fragment {
                    }
 
                 }
-                System.out.println(scores);
+              
                 QuickSort quickSort=new QuickSort(destinations,scores);
                 destinations=  quickSort.startQuicksort();
                 setUpAdapter(destinations);
