@@ -6,6 +6,9 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,6 +29,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.unipi.p17050.mytourguide.Models.Profile;
+import com.unipi.p17050.mytourguide.ViewModels.ProfilesViewModel;
 
 import java.util.ArrayList;
 
@@ -35,15 +39,17 @@ public class ProfileFragment extends Fragment {
     private Button culture_b,sport_b,religion_b,strolling_b;
     private CheckBox hard_c,medium_c,easy_c;
     private ImageButton info_b;
-    private  Profile profile= new Profile();
-    private FirebaseUser user;
-    private DatabaseReference mDatabase;
+
+    private Profile profile;
+
+
+    private  ProfilesViewModel viewModel;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         root= inflater.inflate(R.layout.fragment_profile, container, false);
-        user= FirebaseAuth.getInstance().getCurrentUser();
+
         info_b=root.findViewById(R.id.info_Button);
         initializeButtons();
         initializeCheckboxes();
@@ -55,52 +61,42 @@ showMessage(getString(R.string.infos),getString(R.string.accessibility_infos));
         });
 
 
+       viewModel =  new ViewModelProvider(requireActivity()).get(ProfilesViewModel.class);
 
-
-        mDatabase=FirebaseDatabase.getInstance().getReference();
-        mDatabase.child("Profiles").child(user.getUid()).addValueEventListener(new ValueEventListener() {
+        viewModel.getProfile().observe(getViewLifecycleOwner(), new Observer<Profile>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if(snapshot.getValue(Profile.class)!=null) {
-                        profile = snapshot.getValue(Profile.class);
-                        ((MainActivity)getActivity()).setProfile(profile);
-                        for (String interest:profile.getInterests()){
-                            switch (interest){
-                                case "culture":
-                                    culture_b.setSelected(true);
-                                    break;
-                                case "religion":
-                                    religion_b.setSelected(true);
-                                    break;
-                                case "strolling":
-                                    strolling_b.setSelected(true);
-                                    break;
-                                case "sport":
-                                    sport_b.setSelected(true);
-                                    break;
-                            }
-                        }
-                        for (int accessibility:profile.getAccessibility()){
-                            switch (accessibility){
-                                case 1:
-                                    easy_c.setChecked(true);
-                                    break;
-                                case 2:
-                                    medium_c.setChecked(true);
-                                    break;
-                                case 3:
-                                    hard_c.setChecked(true);;
-                                    break;
-
-                            }
-                        }
+            public void onChanged(Profile prof) {
+                profile=prof;
+                for (String interest:profile.getInterests()){
+                    switch (interest){
+                        case "culture":
+                            culture_b.setSelected(true);
+                            break;
+                        case "religion":
+                            religion_b.setSelected(true);
+                            break;
+                        case "strolling":
+                            strolling_b.setSelected(true);
+                            break;
+                        case "sport":
+                            sport_b.setSelected(true);
+                            break;
                     }
+                }
+                for (int accessibility:profile.getAccessibility()){
+                    switch (accessibility){
+                        case 1:
+                            easy_c.setChecked(true);
+                            break;
+                        case 2:
+                            medium_c.setChecked(true);
+                            break;
+                        case 3:
+                            hard_c.setChecked(true);;
+                            break;
 
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.d("DataRead","Error when reading data");
+                    }
+                }
             }
         });
 
@@ -117,7 +113,7 @@ showMessage(getString(R.string.infos),getString(R.string.accessibility_infos));
                   profile.addAccessibility(value);
               else
                   profile.removeAccessibility(value);
-              mDatabase.child("Profiles").child(user.getUid()).child("accessibility").setValue(profile.getAccessibility());
+              viewModel.setProfile(profile);
           }
       });
 
@@ -137,8 +133,9 @@ showMessage(getString(R.string.infos),getString(R.string.accessibility_infos));
                     button.setSelected(true);
                     profile.addInterest(value);
                 }
-                ((MainActivity)getActivity()).setProfile(profile);
-                mDatabase.child("Profiles").child(user.getUid()).child("interests").setValue(profile.getInterests());
+
+
+                viewModel.setProfile(profile);
             }
         });
     }

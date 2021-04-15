@@ -4,6 +4,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,8 +27,11 @@ import com.unipi.p17050.mytourguide.Models.Destination;
 import com.unipi.p17050.mytourguide.Models.Profile;
 import com.unipi.p17050.mytourguide.Others.Jaccard;
 import com.unipi.p17050.mytourguide.Others.QuickSort;
+import com.unipi.p17050.mytourguide.ViewModels.MyDestinationsViewModel;
+import com.unipi.p17050.mytourguide.ViewModels.ProfilesViewModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.unipi.p17050.mytourguide.Others.Jaccard.calculate;
 
@@ -35,10 +40,12 @@ public class GuideFragment extends Fragment {
    private static final String CLICKED="clicked";
    private FloatingActionButton startButton;
    private RecyclerView destinationsRV;
-   private boolean clicked;
+
    private View view;
    private DatabaseReference mDatabase;
-   private  ArrayList <Destination>  destinations=new ArrayList<>();
+   private MyDestinationsViewModel destviewModel;
+    private  Profile profile;
+    private  ArrayList <Destination>  destinations;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -46,47 +53,63 @@ public class GuideFragment extends Fragment {
          view= inflater.inflate(R.layout.fragment_guide, container, false);
         mDatabase= FirebaseDatabase.getInstance().getReference();
         destinationsRV=view.findViewById(R.id.destinationsRV);
-        if (savedInstanceState != null) {
-            clicked = savedInstanceState.getBoolean(CLICKED, false);
-        } else {
+        startButton=view.findViewById(R.id.startButton);
+        ProfilesViewModel viewModel =  new ViewModelProvider(requireActivity()).get(ProfilesViewModel.class);
+        destviewModel= new ViewModelProvider(requireActivity()).get(MyDestinationsViewModel.class);
+        viewModel.getProfile().observe(getViewLifecycleOwner(), new Observer<Profile>() {
+            @Override
+            public void onChanged(Profile prof) {
+                profile=prof;
+            }
+        });
+        destviewModel.getDestinations().observe(getViewLifecycleOwner(), new Observer<List<Destination>>() {
+            @Override
+            public void onChanged(List<Destination> dest) {
+                destinations= (ArrayList<Destination>) dest;
+                setUpAdapter(destinations);
+            }
+        });
 
-            clicked=false;
-        }
+        destviewModel.getClicked().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                startButton.setSelected(aBoolean);
+
+            }
+        });
+
        initializeStartButton();
          return  view;
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean(CLICKED, clicked);
-    }
+
 
     private void initializeStartButton(){
-        startButton=view.findViewById(R.id.startButton);
-        startButton.setSelected(clicked);
+
+
 
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d("TAG","Button clicked");
                 if( startButton.isSelected()) {
-                    clicked=false;
+                    destviewModel.setClicked(false);
                     destinations.clear();
-                    setUpAdapter(destinations);
+                    destviewModel.setDestinations(destinations);
+
                 }
                 else {
                     addDataToRV();
-                    clicked=true;
+                    destviewModel.setClicked(true);
                 }
 
-                startButton.setSelected(clicked);
 
 
             }
         });
     }
     private void addDataToRV(){
-        final Profile profile =  ((MainActivity)getActivity()).getProfile();
+
         if(profile==null){
             Toast.makeText(getContext(),getString(R.string.Setup_profile),Toast.LENGTH_SHORT).show();
             return;
@@ -106,7 +129,7 @@ public class GuideFragment extends Fragment {
 
 
                        if(profile.getAccessibility().contains(destination.getAccessibility())){
-
+                           Log.d("TAG","destination found");
                           scores.add(Jaccard.calculate(profile,destination));
 
                           destinations.add(destination);
@@ -114,10 +137,11 @@ public class GuideFragment extends Fragment {
                    }
 
                 }
-              
+
                 QuickSort quickSort=new QuickSort(destinations,scores);
-                destinations=  quickSort.startQuicksort();
-                setUpAdapter(destinations);
+
+                destviewModel.setDestinations( quickSort.startQuicksort());
+
             }
 
             @Override
