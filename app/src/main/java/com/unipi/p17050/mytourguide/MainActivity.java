@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -29,6 +30,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.unipi.p17050.mytourguide.Models.Profile;
+import com.unipi.p17050.mytourguide.ViewModels.ProfilesViewModel;
 
 import java.security.PublicKey;
 
@@ -52,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         bnv=findViewById(R.id.bottom_navigation);
         bnv.setOnNavigationItemSelectedListener(navListener);
+        ProfilesViewModel viewModel =  new ViewModelProvider(this).get(ProfilesViewModel.class);
+        viewModel.getProfile();
         if (savedInstanceState == null)
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new ProfileFragment()).commit();
 
@@ -120,7 +124,7 @@ public  boolean isServicesOk(){
                 selectedFragment=new GuideFragment();
                 break;
             case R.id.map:
-                selectedFragment=new ProfileFragment();
+                selectedFragment=new MapFragment();
                 break;
         }
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,selectedFragment).commit();
