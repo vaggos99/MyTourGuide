@@ -21,12 +21,10 @@ public class ProfilesViewModel extends ViewModel {
     private MutableLiveData<Profile> profile;
 
 
-
-
-    public MutableLiveData<Profile>  getProfile() {
+    public MutableLiveData<Profile> getProfile() {
         Log.i(TAG, "Get profile");
-        if(profile==null) {
-            profile=new MutableLiveData<>();
+        if (profile == null) {
+            profile = new MutableLiveData<>();
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
             mDatabase.child("Profiles").child(user.getUid()).addValueEventListener(new ValueEventListener() {
@@ -34,6 +32,7 @@ public class ProfilesViewModel extends ViewModel {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.exists())
                         profile.postValue(snapshot.getValue(Profile.class));
+                    else profile.postValue(new Profile());
                 }
 
                 @Override
@@ -46,14 +45,14 @@ public class ProfilesViewModel extends ViewModel {
     }
 
 
-
     public void setProfile(Profile profile) {
         Log.i(TAG, "update profile");
         this.profile.setValue(profile);
-        FirebaseUser user= FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference mDatabase=FirebaseDatabase.getInstance().getReference();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
         mDatabase.child("Profiles").child(user.getUid()).setValue(profile);
     }
+
     @Override
     protected void onCleared() {
         super.onCleared();

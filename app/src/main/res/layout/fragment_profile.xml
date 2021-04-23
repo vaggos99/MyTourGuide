@@ -11,19 +11,36 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+        <com.github.aakira.expandablelayout.ExpandableRelativeLayout
+            android:id="@+id/expandableLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:ael_expanded="false"
+            app:ael_duration="500"
+            app:ael_interpolator="bounce"
+            app:ael_orientation="vertical">
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="@string/interests"
+                android:textSize="20sp" />
 
+
+        </com.github.aakira.expandablelayout.ExpandableRelativeLayout>
         <View
             android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/primaryDarkColor"
+            android:layout_height="1dp"
             android:layout_marginTop="10dp"
-           />
+            android:background="@color/primaryDarkColor" />
+
+
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
+            android:layout_marginStart="5dp"
             android:text="@string/interests"
-            android:layout_marginStart="5dp"/>
+            android:textSize="20sp" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -97,65 +114,62 @@
                 app:layout_constraintStart_toStartOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/primaryDarkColor" />
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/age_class"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:hint="@string/age_group">
+
+            <AutoCompleteTextView
+                android:id="@+id/age_choices"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/primaryDarkColor"
+            android:layout_height="1dp"
             android:layout_marginTop="10dp"
-            />
-        <com.google.android.material.textview.MaterialTextView
+            android:background="@color/primaryDarkColor" />
+
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/has_children"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:text="@string/accessibility"
-            android:layout_marginStart="5dp"/>
+            android:text="@string/children" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <View
             android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/primaryDarkColor" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/enable_distance"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:text="@string/max_distance" />
 
-            <CheckBox
-                android:id="@+id/checkBox_Easy"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:text="1"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <CheckBox
-                android:id="@+id/checkBox_Medium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:text="2"
-                app:layout_constraintBottom_toBottomOf="@+id/checkBox_Easy"
-                app:layout_constraintStart_toEndOf="@+id/checkBox_Easy" />
-
-            <CheckBox
-                android:id="@+id/checkBox_Hard"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:text="3"
-                app:layout_constraintBottom_toBottomOf="@+id/checkBox_Easy"
-                app:layout_constraintStart_toEndOf="@+id/checkBox_Medium" />
-
-            <ImageButton
-                android:id="@+id/info_Button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:layout_marginEnd="8dp"
-                android:src="@drawable/ic_baseline_info_24"
-                app:layout_constraintBottom_toBottomOf="@+id/checkBox_Hard"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
+        <com.google.android.material.slider.Slider
+            android:id="@+id/slider"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:stepSize="0.5"
+            android:valueFrom="1.0"
+            android:valueTo="10.0" />/>
     </LinearLayout>
 
 </FrameLayout>

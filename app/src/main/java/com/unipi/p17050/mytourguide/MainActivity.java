@@ -18,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.SearchEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,12 +28,15 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.unipi.p17050.mytourguide.Models.Profile;
 import com.unipi.p17050.mytourguide.ViewModels.ProfilesViewModel;
 
 import java.security.PublicKey;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -51,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         user= FirebaseAuth.getInstance().getCurrentUser();
         if(user ==null)
             logout();
+
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         bnv=findViewById(R.id.bottom_navigation);
         bnv.setOnNavigationItemSelectedListener(navListener);

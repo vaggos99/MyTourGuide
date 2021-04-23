@@ -6,8 +6,38 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 
 public class Profile {
-   private ArrayList<String> interests= new ArrayList<String>();
-   private ArrayList<Integer> accessibility=new ArrayList<>();
+    private ArrayList<String> interests = new ArrayList<String>();
+    private ArrayList<Integer> accessibility = new ArrayList<>();
+    private String age_group;
+    private float distance = -1;
+    private boolean children;
+
+    public boolean isChildren() {
+        return children;
+    }
+
+    public void setChildren(boolean children) {
+        this.children = children;
+    }
+
+    public float getDistance() {
+        return distance;
+    }
+
+    public void setDistance(float distance) {
+        this.distance = distance;
+    }
+
+    public String getAge_group() {
+        if(age_group==null)
+            age_group="";
+        return age_group;
+    }
+
+    public void setAge_group(String age_group) {
+        this.age_group = age_group;
+    }
+
 
     public ArrayList<String> getInterests() {
 
@@ -25,19 +55,22 @@ public class Profile {
     public void setAccessibility(ArrayList<Integer> accessibility) {
         this.accessibility = accessibility;
     }
-    public void addInterest(String value){
-        if(!interests.contains(value))
+
+    public void addInterest(String value) {
+        if (!interests.contains(value))
             interests.add(value);
     }
-    public void removeInterest(String value){
-            interests.remove(value);
+
+    public void removeInterest(String value) {
+        interests.remove(value);
     }
 
-    public void addAccessibility(int value){
-        if(!accessibility.contains(value))
+    public void addAccessibility(int value) {
+        if (!accessibility.contains(value))
             accessibility.add(value);
     }
-    public void removeAccessibility(Object value){
+
+    public void removeAccessibility(Object value) {
         accessibility.remove(value);
     }
 }
