@@ -13,12 +13,19 @@ public class Jaccard {
     {
         ArrayList profile_interests=new ArrayList(profile.getInterests());
         ArrayList destination_interests=new ArrayList(destination.getCategory());
+        String profile_age_group=profile.getAge_group();
+        ArrayList destination_age_group=new ArrayList(destination.getAge_group());
 
-        double union= getUnionOfLists(profile_interests,destination_interests);
+        double union= getUnionOfLists(profile_interests,destination_interests)+destination_age_group.size();
         double intersect=  getIntersectOfLists(profile_interests,destination_interests);
+        if(destination_age_group.contains(profile_age_group))
+            intersect++;
 
         return intersect/union;
     }
+
+
+
     private static double getUnionOfLists(List<String> list1, List<String> list2) {
 
         Set<String> set = new HashSet<>();

@@ -37,128 +37,56 @@ import static com.unipi.p17050.mytourguide.Others.Jaccard.calculate;
 
 
 public class GuideFragment extends Fragment {
-   private static final String CLICKED="clicked";
-   private FloatingActionButton startButton;
-   private RecyclerView destinationsRV;
+    private static final String CLICKED = "clicked";
 
-   private View view;
-   private DatabaseReference mDatabase;
-   private MyDestinationsViewModel destviewModel;
-    private  Profile profile;
-    private  ArrayList <Destination>  destinations;
+    private RecyclerView destinationsRV;
+
+    private View view;
+
+    private MyDestinationsViewModel destviewModel;
+    private Profile profile;
+    private ArrayList<Destination> destinations;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-         view= inflater.inflate(R.layout.fragment_guide, container, false);
-        mDatabase= FirebaseDatabase.getInstance().getReference();
-        destinationsRV=view.findViewById(R.id.destinationsRV);
-        startButton=view.findViewById(R.id.startButton);
-        ProfilesViewModel viewModel =  new ViewModelProvider(requireActivity()).get(ProfilesViewModel.class);
-        destviewModel= new ViewModelProvider(requireActivity()).get(MyDestinationsViewModel.class);
+        view = inflater.inflate(R.layout.fragment_guide, container, false);
+
+        destinationsRV = view.findViewById(R.id.destinationsRV);
+
+        ProfilesViewModel viewModel = new ViewModelProvider(requireActivity()).get(ProfilesViewModel.class);
+        destviewModel = new ViewModelProvider(requireActivity()).get(MyDestinationsViewModel.class);
         viewModel.getProfile().observe(getViewLifecycleOwner(), new Observer<Profile>() {
             @Override
             public void onChanged(Profile prof) {
-                profile=prof;
+                profile = prof;
+                destviewModel.setDestinations(profile);
             }
         });
+
         destviewModel.getDestinations().observe(getViewLifecycleOwner(), new Observer<List<Destination>>() {
             @Override
             public void onChanged(List<Destination> dest) {
-                destinations= (ArrayList<Destination>) dest;
-                setUpAdapter(destinations);
+                destinations = (ArrayList<Destination>) dest;
+                if(destinations==null)
+                    Toast.makeText(getContext(),"Yoy have to fill your profile",Toast.LENGTH_SHORT).show();
+                else
+                    setUpAdapter(destinations);
             }
         });
 
-        destviewModel.getClicked().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                startButton.setSelected(aBoolean);
 
-            }
-        });
 
-       initializeStartButton();
-         return  view;
+        return view;
     }
 
 
-
-    private void initializeStartButton(){
-
-
-
-        startButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("TAG","Button clicked");
-                if( startButton.isSelected()) {
-                    destviewModel.setClicked(false);
-                    destinations.clear();
-                    destviewModel.setDestinations(destinations);
-
-                }
-                else {
-                    addDataToRV();
-                    destviewModel.setClicked(true);
-                }
-
-
-
-            }
-        });
+    private void setUpAdapter(ArrayList<Destination> dest) {
+        DestinationsRecyclerViewAdapter adapter = new DestinationsRecyclerViewAdapter();
+        adapter.setDestinations(dest);
+        destinationsRV.setAdapter(adapter);
+        destinationsRV.setLayoutManager(new LinearLayoutManager(getContext()));
     }
-    private void addDataToRV(){
-
-        if(profile==null){
-            Toast.makeText(getContext(),getString(R.string.Setup_profile),Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-
-        mDatabase.child("destinations").addListenerForSingleValueEvent(new ValueEventListener() {
-
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Log.d("TAG","fetching destinations");
-                 ArrayList<Double> scores=new ArrayList<>();
-
-
-                for(DataSnapshot dataSnapshot:snapshot.getChildren()){
-                    Destination destination=dataSnapshot.getValue(Destination.class);
-
-
-                       if(profile.getAccessibility().contains(destination.getAccessibility())){
-                           Log.d("TAG","destination found");
-                          scores.add(Jaccard.calculate(profile,destination));
-
-                          destinations.add(destination);
-
-                   }
-
-                }
-
-                QuickSort quickSort=new QuickSort(destinations,scores);
-
-                destviewModel.setDestinations( quickSort.startQuicksort());
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-
-    }
-
-
-private void setUpAdapter(ArrayList<Destination> dest){
-    DestinationsRecyclerViewAdapter adapter=new DestinationsRecyclerViewAdapter();
-    adapter.setDestinations(dest);
-    destinationsRV.setAdapter(adapter);
-    destinationsRV.setLayoutManager(new LinearLayoutManager(getContext()));
-}
 
 }

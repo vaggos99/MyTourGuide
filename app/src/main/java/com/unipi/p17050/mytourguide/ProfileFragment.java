@@ -281,6 +281,6 @@ public class ProfileFragment extends Fragment {
         chipClicked(strolling_chip, "strolling");
         chipClicked(shopping_chip, "shopping");
         chipClicked(theater_chip, "theater");
-        chipClicked(theater_chip,"coffee/dining");
+        chipClicked(dining_chip,"coffee/dining");
     }
 }

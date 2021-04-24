@@ -13,9 +13,20 @@ public class Destination {
 
     private String type;
     private ArrayList<String> category;
+    private ArrayList<String> age_group;
     private int accessibility;
     private float latitude ;
     private float longitude ;
+
+    public ArrayList<String> getAge_group() {
+        return age_group;
+    }
+
+    public void setAge_group(ArrayList<String> age_group) {
+        this.age_group = age_group;
+    }
+
+
     public String getName() {
         return name;
     }
