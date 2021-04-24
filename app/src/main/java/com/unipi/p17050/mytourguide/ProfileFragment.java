@@ -1,16 +1,12 @@
 package com.unipi.p17050.mytourguide;
 
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,93 +16,114 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.ImageButton;
-import android.widget.Spinner;
-import android.widget.Toast;
 
-import com.github.aakira.expandablelayout.ExpandableRelativeLayout;
+
 import com.google.android.material.checkbox.MaterialCheckBox;
+import com.google.android.material.chip.Chip;
 import com.google.android.material.slider.Slider;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.unipi.p17050.mytourguide.Models.Profile;
 import com.unipi.p17050.mytourguide.ViewModels.ProfilesViewModel;
 
-import java.util.ArrayList;
-import java.util.List;
+import net.cachapa.expandablelayout.ExpandableLayout;
 
 
 public class ProfileFragment extends Fragment {
+    private String TAG = this.getClass().getSimpleName();
     private View root;
     private Button culture_b, sport_b, religion_b, strolling_b;
     private SwitchMaterial switcher;
     private TextInputLayout age_class;
     private AutoCompleteTextView age_choices;
+    private ExpandableLayout c_expandableLayout, e_expandableLayout, s_expandableLayout, r_expandableLayout;
     private Profile profile;
     private Slider slider;
     private MaterialCheckBox has_children;
     private ProfilesViewModel viewModel;
+    private Chip museum_chip, archaeological_chip, stadium_chip, sports_chip, churches_chip, monastery_chip, strolling_chip, shopping_chip, theater_chip,dining_chip;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ArrayAdapter<String> agedGroup = new ArrayAdapter<>(getContext(), R.layout.list_item, getResources().getStringArray(R.array.age_class_array));
+        age_choices.setAdapter(agedGroup);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         root = inflater.inflate(R.layout.fragment_profile, container, false);
-
-
-        initializeButtons();
-
+        
+        initializeExpendables();
+        initializeChips();
         switcher = root.findViewById(R.id.enable_distance);
         slider = root.findViewById(R.id.slider);
         age_class = root.findViewById(R.id.age_class);
         age_choices = root.findViewById(R.id.age_choices);
         has_children = root.findViewById(R.id.has_children);
-        ExpandableRelativeLayout expandableLayout
-                = (ExpandableRelativeLayout) root.findViewById(R.id.expandableLayout);
 
 
-
-// set base position which is close position
-        expandableLayout.setClosePosition(500);
         viewModel = new ViewModelProvider(requireActivity()).get(ProfilesViewModel.class);
-        ArrayAdapter<String> agedGroup = new ArrayAdapter<>(getContext(), R.layout.list_item, getResources().getStringArray(R.array.age_class_array));
-        age_choices.setAdapter(agedGroup);
+
         viewModel.getProfile().observe(getViewLifecycleOwner(), new Observer<Profile>() {
             @Override
             public void onChanged(Profile prof) {
                 profile = prof;
                 for (String interest : profile.getInterests()) {
                     switch (interest) {
-                        case "culture":
-                            culture_b.setSelected(true);
+                        case "museums":
+                            museum_chip.setSelected(true);
+                            museum_chip.setChecked(true);
                             break;
-                        case "religion":
-                            religion_b.setSelected(true);
+                        case "archaeological places":
+                            archaeological_chip.setSelected(true);
+                            archaeological_chip.setChecked(true);
+                            break;
+                        case "stadiums":
+                            stadium_chip.setSelected(true);
+                            stadium_chip.setChecked(true);
+                            break;
+                        case "sport places":
+                            sports_chip.setSelected(true);
+                            sports_chip.setChecked(true);
+                            break;
+                        case "churches":
+                            churches_chip.setSelected(true);
+                            churches_chip.setChecked(true);
+                            break;
+                        case "monasteries":
+                            monastery_chip.setSelected(true);
+                            monastery_chip.setChecked(true);
                             break;
                         case "strolling":
-                            strolling_b.setSelected(true);
+                            strolling_chip.setSelected(true);
+                            strolling_chip.setChecked(true);
                             break;
-                        case "sport":
-                            sport_b.setSelected(true);
+                        case "shopping":
+                            shopping_chip.setSelected(true);
+                            shopping_chip.setChecked(true);
+                            break;
+                        case "theater":
+                            theater_chip.setSelected(true);
+                            theater_chip.setChecked(true);
+                            break;
+                        case "coffee/dining":
+                            dining_chip.setSelected(true);
+                            dining_chip.setChecked(true);
                             break;
                     }
                 }
                 switch (profile.getAge_group()) {
                     case "Teen/Adult":
-                        age_choices.setText(getString(R.string.Teen_Adult),false);
+                        age_choices.setText(getString(R.string.Teen_Adult), false);
                         break;
                     case "Middle-aged":
-                        age_choices.setText(getString(R.string.Middle_aged),false);
+                        age_choices.setText(getString(R.string.Middle_aged), false);
                         break;
                     case "Elder":
-                        age_choices.setText(getString(R.string.Elder),false);
+                        age_choices.setText(getString(R.string.Elder), false);
                         break;
                 }
                 if (profile.getDistance() < 0) {
@@ -186,35 +203,84 @@ public class ProfileFragment extends Fragment {
 
     }
 
-
-    private void buttonColorChange(Button button, String value) {
-
-        button.setOnClickListener(new View.OnClickListener() {
+    private void chipClicked(Chip chip, String value) {
+        chip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (button.isSelected()) {
-                    button.setSelected(false);
+                if (chip.isSelected()) {
+                    chip.setSelected(false);
+                    chip.setChecked(false);
                     profile.removeInterest(value);
                 } else {
-                    button.setSelected(true);
+                    chip.setSelected(true);
+                    chip.setChecked(true);
                     profile.addInterest(value);
                 }
 
 
                 viewModel.setProfile(profile);
             }
+
         });
     }
 
-    private void initializeButtons() {
-        culture_b = root.findViewById(R.id.culture_button);
-        religion_b = root.findViewById(R.id.religion_button);
-        strolling_b = root.findViewById(R.id.strolling_button);
-        sport_b = root.findViewById(R.id.sport_button);
-        buttonColorChange(culture_b, "culture");
-        buttonColorChange(religion_b, "religion");
-        buttonColorChange(strolling_b, "strolling");
-        buttonColorChange(sport_b, "sport");
+    private void buttonClicked(Button button, ExpandableLayout expandableLayout) {
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (button.isSelected()) {
+                    button.setSelected(false);
+                } else {
+                    button.setSelected(true);
+                }
+
+                expandableLayout.toggle();
+            }
+        });
     }
 
+    private void initializeExpendables() {
+        culture_b = root.findViewById(R.id.culture_button);
+        religion_b = root.findViewById(R.id.religion_button);
+        strolling_b = root.findViewById(R.id.entertainment_button);
+        sport_b = root.findViewById(R.id.sport_button);
+
+        c_expandableLayout
+                = (ExpandableLayout) root.findViewById(R.id.culture_expandable);
+        e_expandableLayout
+                = (ExpandableLayout) root.findViewById(R.id.entertainment_expendable);
+        s_expandableLayout
+                = (ExpandableLayout) root.findViewById(R.id.sport_expandable);
+        r_expandableLayout
+                = (ExpandableLayout) root.findViewById(R.id.religion_expandable);
+
+        buttonClicked(culture_b, c_expandableLayout);
+        buttonClicked(religion_b, r_expandableLayout);
+        buttonClicked(strolling_b, e_expandableLayout);
+        buttonClicked(sport_b, s_expandableLayout);
+    }
+
+    private void initializeChips() {
+        museum_chip = root.findViewById(R.id.museum);
+        archaeological_chip = root.findViewById(R.id.archaeological);
+        stadium_chip = root.findViewById(R.id.stadiums);
+        sports_chip = root.findViewById(R.id.sports_places);
+        churches_chip = root.findViewById(R.id.churches);
+        monastery_chip = root.findViewById(R.id.monastery);
+        strolling_chip = root.findViewById(R.id.strolling);
+        shopping_chip = root.findViewById(R.id.shopping);
+        theater_chip = root.findViewById(R.id.theater);
+        dining_chip=root.findViewById(R.id.dining);
+        chipClicked(museum_chip, "museums");
+        chipClicked(archaeological_chip, "archaeological places");
+        chipClicked(sports_chip, "sport places");
+        chipClicked(stadium_chip, "stadiums");
+        chipClicked(churches_chip, "churches");
+        chipClicked(monastery_chip, "monasteries");
+        chipClicked(strolling_chip, "strolling");
+        chipClicked(shopping_chip, "shopping");
+        chipClicked(theater_chip, "theater");
+        chipClicked(theater_chip,"coffee/dining");
+    }
 }

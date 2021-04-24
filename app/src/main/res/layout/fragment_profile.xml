@@ -1,33 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingStart="5dp"
+    android:paddingEnd="5dp"
     tools:context=".ProfileFragment">
 
     <!-- TODO: Update blank fragment layout -->
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
-        <com.github.aakira.expandablelayout.ExpandableRelativeLayout
-            android:id="@+id/expandableLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:ael_expanded="false"
-            app:ael_duration="500"
-            app:ael_interpolator="bounce"
-            app:ael_orientation="vertical">
-            <com.google.android.material.textview.MaterialTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:text="@string/interests"
-                android:textSize="20sp" />
 
-
-        </com.github.aakira.expandablelayout.ExpandableRelativeLayout>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -39,80 +26,181 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
+
             android:text="@string/interests"
             android:textSize="20sp" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <Button
+            android:id="@+id/culture_button"
+            style="@style/InterestButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            tools:layout_editor_absoluteX="1dp">
+            android:text="@string/Culture"
+            app:icon="@drawable/button_icon" />
 
-            <Button
-                android:id="@+id/culture_button"
-                style="@style/InterestButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:text="@string/Culture"
-                app:icon="@drawable/button_icon"
-                app:layout_constraintBottom_toBottomOf="@+id/sport_button"
-                app:layout_constraintEnd_toStartOf="@+id/sport_button"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="1.0" />
+        <net.cachapa.expandablelayout.ExpandableLayout
+            android:id="@+id/culture_expandable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:ael_expanded="false">
 
-            <Button
-                android:id="@+id/sport_button"
-                style="@style/InterestButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+            <com.google.android.material.chip.ChipGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/museum"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:text="@string/museums" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/archaeological"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:text="@string/monuments" />
 
 
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:text="@string/Sport"
-                app:icon="@drawable/button_icon"
-                app:layout_constraintBottom_toTopOf="@+id/religion_button"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/culture_button"
-                app:layout_constraintTop_toTopOf="parent" />
+            </com.google.android.material.chip.ChipGroup>
+        </net.cachapa.expandablelayout.ExpandableLayout>
 
-            <Button
-                android:id="@+id/religion_button"
-                style="@style/InterestButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+        <Button
+            android:id="@+id/sport_button"
+            style="@style/InterestButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/Sport"
+            app:icon="@drawable/button_icon" />
 
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:text="@string/Religion"
-                app:icon="@drawable/button_icon"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/strolling_button"
-                app:layout_constraintTop_toBottomOf="@+id/sport_button" />
+        <net.cachapa.expandablelayout.ExpandableLayout
+            android:id="@+id/sport_expandable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
 
-            <Button
-                android:id="@+id/strolling_button"
-                style="@style/InterestButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+            app:ael_expanded="false">
 
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:text="@string/Strolling"
-                app:icon="@drawable/button_icon"
-                app:layout_constraintBottom_toBottomOf="@+id/religion_button"
-                app:layout_constraintEnd_toStartOf="@+id/religion_button"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            <com.google.android.material.chip.ChipGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/stadiums"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:text="@string/stadiums" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/sports_places"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:text="@string/sports" />
+
+
+            </com.google.android.material.chip.ChipGroup>
+        </net.cachapa.expandablelayout.ExpandableLayout>
+
+        <Button
+            android:id="@+id/religion_button"
+            style="@style/InterestButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/Religion"
+            app:icon="@drawable/button_icon" />
+
+        <net.cachapa.expandablelayout.ExpandableLayout
+            android:id="@+id/religion_expandable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:ael_expanded="false">
+
+            <com.google.android.material.chip.ChipGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/churches"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:text="@string/churches" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/monastery"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:text="@string/monasteries" />
+
+
+            </com.google.android.material.chip.ChipGroup>
+        </net.cachapa.expandablelayout.ExpandableLayout>
+
+        <Button
+            android:id="@+id/entertainment_button"
+            style="@style/InterestButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/entertainment"
+            app:icon="@drawable/button_icon" />
+
+        <net.cachapa.expandablelayout.ExpandableLayout
+            android:id="@+id/entertainment_expendable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:ael_expanded="false">
+
+            <com.google.android.material.chip.ChipGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/strolling"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:text="@string/Strolling" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/shopping"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:text="@string/shopping" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/theater"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:text="@string/theater" />
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/dining"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:text="@string/dining" />
+
+            </com.google.android.material.chip.ChipGroup>
+        </net.cachapa.expandablelayout.ExpandableLayout>
+
 
         <View
             android:layout_width="match_parent"
@@ -169,7 +257,8 @@
             android:enabled="false"
             android:stepSize="0.5"
             android:valueFrom="1.0"
-            android:valueTo="10.0" />/>
+            android:valueTo="10.0" />
     </LinearLayout>
+</ScrollView>
 
-</FrameLayout>
+

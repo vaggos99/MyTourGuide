@@ -15,21 +15,33 @@
     <string name="search_place">Search a place</string>
     <string name="google_api" translatable="false">AIzaSyAgxuI0TDOkNf0WurR3Rsqzn6Hxz0s87lo</string>
     <string name="gps_perrmissions">Enable gps usage to find your location</string>
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="Temple_of_Hephaestus">Temple of Hephaestus</string>
     <string name="interests">Interests</string>
     <string name="age_group">Age group</string>
     <string name="Culture">Culture</string>
     <string name="Strolling">Strolling</string>
-    <string name="Sport">Sport</string>
+    <string name="Sport">Sports</string>
     <string name="Religion">Religion</string>
     <string name="Setup_profile">You have to set up your profile</string>
     <string name="Teen_Adult">Teen/Adult</string>
     <string name="Middle_aged">Middle-aged</string>
     <string name="Elder">Elder</string>
-<string name="max_distance">Max distance(in km)</string>
+    <string name="max_distance">Max distance(in km)</string>
     <string name="children">I have little children</string>
+    <string name="entertainment">Entertainment</string>
+    <string name="museums">Museums</string>
+    <string name="monuments">Monuments</string>
+    <string name="theater">Theater</string>
+    <string name="stadiums">Stadiums</string>
+    <string name="sports">Sports</string>
+    <string name="churches">Churches</string>
+    <string name="monasteries">Monasteries</string>
+    <string name="dining">Coffee/Dining</string>
+    <string translatable="false" name="shopping">Shopping</string>
+
+
 
     <string-array name="age_class_array">
         <item>Teen/Adult</item>

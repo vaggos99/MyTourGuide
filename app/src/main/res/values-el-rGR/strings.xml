@@ -20,16 +20,24 @@
     <string name="interests">Ενδιαφέροντα</string>
     <string name="age_group">Ηλικιακή ομάδα</string>
     <string name="Culture">Πολιτισμός</string>
-    <string name="Strolling">Βόλτα</string>
-    <string name="Sport">Άθληση</string>
+    <string name="Strolling">Περιήγηση</string>
+    <string name="Sport">Άθλητισμός</string>
     <string name="Religion">Θρησκεία</string>
     <string name="Setup_profile">Πρέπει να συμπληρώσεις το προφιλ σου</string>
-
+    <string name="entertainment">Διασκέδαση</string>
     <string name="Teen_Adult">Έφηβος/Ενήλικας</string>
     <string name="Middle_aged">Μεσήλικας</string>
     <string name="Elder">Ηλικωμένος</string>
     <string name="max_distance">Μέγιστη απόσταση(σε χλμ)</string>
     <string name="children">Έχω μικρά παιδιά</string>
+    <string name="museums">Μουσεία</string>
+    <string name="monuments">Mνημεία</string>
+    <string name="theater">Θέατρο</string>
+    <string name="stadiums">Στάδια</string>
+    <string name="sports">Άθληση</string>
+    <string name="churches">Εκκλησίες</string>
+    <string name="monasteries">Μοναστήρια</string>
+    <string name="dining">Καφές/Φαγγητό</string>
     <string-array name="age_class_array">
         <item>Έφηβος/Ενήλικας</item>
         <item>Μεσήλικας</item>
