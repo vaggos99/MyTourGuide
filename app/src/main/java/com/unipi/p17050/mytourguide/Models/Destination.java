@@ -10,13 +10,15 @@ public class Destination {
     private String name;
 
 
+    private String image;
+
 
     private String type;
     private ArrayList<String> category;
     private ArrayList<String> age_group;
     private int accessibility;
-    private float latitude ;
-    private float longitude ;
+    private float latitude;
+    private float longitude;
 
     public ArrayList<String> getAge_group() {
         return age_group;
@@ -34,6 +36,7 @@ public class Destination {
     public void setName(String name) {
         this.name = name;
     }
+
     public float getLatitude() {
         return latitude;
     }
@@ -74,5 +77,12 @@ public class Destination {
         this.accessibility = accessibility;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 
 }

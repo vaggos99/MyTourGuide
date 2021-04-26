@@ -40,7 +40,7 @@
     <string name="monasteries">Monasteries</string>
     <string name="dining">Coffee/Dining</string>
     <string translatable="false" name="shopping">Shopping</string>
-
+    <string name="dest_image">Image of place</string>
 
 
     <string-array name="age_class_array">

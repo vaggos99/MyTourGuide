@@ -30,11 +30,11 @@ import net.cachapa.expandablelayout.ExpandableLayout;
 
 
 public class ProfileFragment extends Fragment {
-    private String TAG = this.getClass().getSimpleName();
+    private final String TAG = this.getClass().getSimpleName();
     private View root;
     private Button culture_b, sport_b, religion_b, strolling_b;
     private SwitchMaterial switcher;
-    private TextInputLayout age_class;
+
     private AutoCompleteTextView age_choices;
     private ExpandableLayout c_expandableLayout, e_expandableLayout, s_expandableLayout, r_expandableLayout;
     private Profile profile;
@@ -60,7 +60,7 @@ public class ProfileFragment extends Fragment {
         initializeChips();
         switcher = root.findViewById(R.id.enable_distance);
         slider = root.findViewById(R.id.slider);
-        age_class = root.findViewById(R.id.age_class);
+
         age_choices = root.findViewById(R.id.age_choices);
         has_children = root.findViewById(R.id.has_children);
 

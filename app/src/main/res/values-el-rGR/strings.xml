@@ -38,6 +38,7 @@
     <string name="churches">Εκκλησίες</string>
     <string name="monasteries">Μοναστήρια</string>
     <string name="dining">Καφές/Φαγγητό</string>
+    <string name="dest_image">Εικόνα του μέρους</string>
     <string-array name="age_class_array">
         <item>Έφηβος/Ενήλικας</item>
         <item>Μεσήλικας</item>
