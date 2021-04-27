@@ -82,29 +82,30 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.INPUT_METHOD_SERVICE;
 import static com.google.android.libraries.places.api.model.TypeFilter.*;
 
-public class MapFragment extends Fragment implements   OnMapReadyCallback ,NavigationView.OnNavigationItemSelectedListener {
+public class MapFragment extends Fragment implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
 
-   private View view;
+    private View view;
 
-    private  static final int LOCATION_PERMISSION_REQUEST_CODE=1234;
+
     private static final String TAG = MapFragment.class.getName();
-    private static final float DEFAULT_ZOOM=15f;
-    private boolean mLocationPermissionGranted=false;
+    private static final float DEFAULT_ZOOM = 15f;
+    private boolean mLocationPermissionGranted = false;
 
     private SupportMapFragment supportMapFragment;
     private GoogleMap mMap;
 
 
-    private  FusedLocationProviderClient mFusedclient;
-private NavigationView navigationView;
+    private FusedLocationProviderClient mFusedclient;
+    private NavigationView navigationView;
     private Location mLastKnownLocation;
-    private  LocationCallback mLocationCallback;
-    private    MaterialSearchBar materialSearchBar;
+    private LocationCallback mLocationCallback;
+    private MaterialSearchBar materialSearchBar;
     private View mapView;
     private DrawerLayout navDrawer;
 
@@ -113,14 +114,14 @@ private NavigationView navigationView;
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-         view = inflater.inflate(R.layout.fragment_map, container, false);
+        view = inflater.inflate(R.layout.fragment_map, container, false);
         getLocationPermission();
         initMap();
-        mapView=supportMapFragment.getView();
-        mFusedclient=LocationServices.getFusedLocationProviderClient(getActivity());
-         materialSearchBar = view.findViewById(R.id.searchBar);
-         navDrawer = view.findViewById(R.id.drawer);
-         navigationView=view.findViewById(R.id.navigation);
+        mapView = supportMapFragment.getView();
+        mFusedclient = LocationServices.getFusedLocationProviderClient(getActivity());
+        materialSearchBar = view.findViewById(R.id.searchBar);
+        navDrawer = view.findViewById(R.id.drawer);
+        navigationView = view.findViewById(R.id.navigation);
         navigationView.setNavigationItemSelectedListener(this);
         search();
 
@@ -131,53 +132,53 @@ private NavigationView navigationView;
     @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Log.d(TAG,"Map is ready");
-        mMap=googleMap;
-        if(mLocationPermissionGranted){
+        Log.d(TAG, "Map is ready");
+        mMap = googleMap;
+        if (mLocationPermissionGranted) {
             mMap.setMyLocationEnabled(true);
-        }
-        else{
+        } else {
             snackbar(getString(R.string.gps_perrmissions));
         }
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
-        if(mapView!=null &&  mapView.findViewById(Integer.parseInt("1"))!=null){
-            View locationButton= ((View) mapView.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
-            RelativeLayout.LayoutParams layoutParams= (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
-            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP,0);
-            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,RelativeLayout.TRUE);
-            layoutParams.setMargins(0,0,40,180);
+        if (mapView != null && mapView.findViewById(Integer.parseInt("1")) != null) {
+            View locationButton = ((View) mapView.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
+            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
+            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
+            layoutParams.setMargins(0, 0, 40, 180);
         }
+        if(mLocationPermissionGranted) {
+            //check if gps is enabled and request user to enable it
+            LocationRequest locationRequest = LocationRequest.create();
+            locationRequest.setInterval(10000);
+            locationRequest.setFastestInterval(5000);
+            locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-        //check if gps is enabled and request user to enable it
-        LocationRequest locationRequest = LocationRequest.create();
-        locationRequest.setInterval(10000);
-        locationRequest.setFastestInterval(5000);
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+            LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
 
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
+            SettingsClient settingsClient = LocationServices.getSettingsClient(getActivity());
+            Task<LocationSettingsResponse> task = settingsClient.checkLocationSettings(builder.build());
 
-        SettingsClient settingsClient = LocationServices.getSettingsClient(getActivity());
-        Task<LocationSettingsResponse> task = settingsClient.checkLocationSettings(builder.build());
-
-        task.addOnSuccessListener(getActivity(), new OnSuccessListener<LocationSettingsResponse>() {
-            @Override
-            public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
-                getDeviceLocation();
-            }
-        });
-        task.addOnFailureListener(getActivity(), new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                if (e instanceof ResolvableApiException) {
-                    ResolvableApiException resolvable = (ResolvableApiException) e;
-                    try {
-                        resolvable.startResolutionForResult(getActivity(), 51);
-                    } catch (IntentSender.SendIntentException e1) {
-                        e1.printStackTrace();
+            task.addOnSuccessListener(getActivity(), new OnSuccessListener<LocationSettingsResponse>() {
+                @Override
+                public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
+                    getDeviceLocation();
+                }
+            });
+            task.addOnFailureListener(getActivity(), new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    if (e instanceof ResolvableApiException) {
+                        ResolvableApiException resolvable = (ResolvableApiException) e;
+                        try {
+                            resolvable.startResolutionForResult(getActivity(), 51);
+                        } catch (IntentSender.SendIntentException e1) {
+                            e1.printStackTrace();
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
     }
 
     @Override
@@ -191,46 +192,21 @@ private NavigationView navigationView;
     }
 
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        Log.d(TAG,"checking location permissions");
-        mLocationPermissionGranted=false;
-        switch(requestCode){
-            case LOCATION_PERMISSION_REQUEST_CODE:
-                if(grantResults.length>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED){
+    private void getLocationPermission() {
+        Log.d(TAG, "getLocationPermission:getting permissions");
+        if (ActivityCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+            mLocationPermissionGranted = true;
 
-                            Log.d(TAG,"permission given");
-                            mLocationPermissionGranted=true;
-
-                }
-        }
     }
 
 
+    private void initMap() {
+        Log.d(TAG, "initializing map");
 
-    private  void getLocationPermission(){
-        Log.d(TAG,"getLocationPermission:getting permissions");
-        String [] permissions={Manifest.permission.ACCESS_FINE_LOCATION};
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ) {
-                mLocationPermissionGranted = true;
+        supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.google_map);
+        supportMapFragment.getMapAsync(this);
 
-            }
-        else{
-            ActivityCompat.requestPermissions(getActivity(), permissions, LOCATION_PERMISSION_REQUEST_CODE);
-
-    }}
-
-private  void moveCamera(LatLng latLng,float zoom){
-    Log.d(TAG,"moveCamera: Moving the camera to: lat:"+latLng.latitude+",lng:"+latLng.longitude);
-mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,zoom));
-}
-   private void initMap(){
-       Log.d(TAG,"initializing map");
-
-       supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.google_map);
-       supportMapFragment.getMapAsync(this);
-
-   }
+    }
 
     @SuppressLint("MissingPermission")
     private void getDeviceLocation() {
@@ -269,19 +245,11 @@ mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,zoom));
                 });
     }
 
-    private void  snackbar(String message){
-        Snackbar.make(view.findViewById(R.id.parent),message,Snackbar.LENGTH_SHORT)
-                .setAction("OK", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        String [] permissions={Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION};
-                        requestPermissions( permissions, LOCATION_PERMISSION_REQUEST_CODE);
-                    }
-                }).show();
+    private void snackbar(String message) {
+        Snackbar.make(view.findViewById(R.id.drawer), message, Snackbar.LENGTH_SHORT).show();
     }
 
-    private void search(){
+    private void search() {
         materialSearchBar.setOnSearchActionListener(new MaterialSearchBar.OnSearchActionListener() {
             @Override
             public void onSearchStateChanged(boolean enabled) {
@@ -290,21 +258,21 @@ mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,zoom));
 
             @Override
             public void onSearchConfirmed(CharSequence text) {
-                String location =  text.toString();
-                List<Address> addressList=null;
-                if(location !=null || !location.equals("")){
-                    Geocoder geocoder=new Geocoder(getContext());
+                String location = text.toString();
+                List<Address> addressList = null;
+                if (location != null || !location.equals("")) {
+                    Geocoder geocoder = new Geocoder(getContext());
                     try {
-                        addressList=geocoder.getFromLocationName(location,1);
-                        Address address=addressList.get(0);
-                        LatLng latLng=new LatLng(address.getLatitude(),address.getLongitude());
-                        System.out.println(address.getLatitude()+" "+address.getLongitude());
+                        addressList = geocoder.getFromLocationName(location, 1);
+                        Address address = addressList.get(0);
+                        LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                        System.out.println(address.getLatitude() + " " + address.getLongitude());
                         mMap.addMarker(new MarkerOptions().position(latLng).title(location));
-                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,DEFAULT_ZOOM));
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
                     } catch (IOException e) {
                         e.printStackTrace();
-                    }catch (IndexOutOfBoundsException e){
-                        Toast.makeText(getContext(),"Zero results",Toast.LENGTH_SHORT).show();
+                    } catch (IndexOutOfBoundsException e) {
+                        Toast.makeText(getContext(), "Zero results", Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -316,7 +284,7 @@ mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,zoom));
                 if (buttonCode == MaterialSearchBar.BUTTON_NAVIGATION) {
 
                     // If the navigation drawer is not open then open it, if its already open then close it.
-                    if(!navDrawer.isDrawerOpen(Gravity.START)) navDrawer.openDrawer(Gravity.START);
+                    if (!navDrawer.isDrawerOpen(Gravity.START)) navDrawer.openDrawer(Gravity.START);
                     else navDrawer.closeDrawer(Gravity.END);
 
                 } else if (buttonCode == MaterialSearchBar.BUTTON_BACK) {
@@ -331,7 +299,7 @@ mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,zoom));
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
 
             case R.id.normal:
                 mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);

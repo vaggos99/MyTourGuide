@@ -3,12 +3,15 @@ package com.unipi.p17050.mytourguide;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
@@ -44,39 +47,51 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private BottomNavigationView bnv;
     private static final String TAG = "MainActivity";
-    private  static  final  int ERROR_DIALOG_REQUEST=9001;
-
-
+    private static final int ERROR_DIALOG_REQUEST = 9001;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
+    private Fragment selectedFragment = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         FirebaseUser user;
-        user= FirebaseAuth.getInstance().getCurrentUser();
-        if(user ==null)
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null)
             logout();
-
+        getLocationPermission();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        bnv=findViewById(R.id.bottom_navigation);
+        bnv = findViewById(R.id.bottom_navigation);
         bnv.setOnNavigationItemSelectedListener(navListener);
-        ProfilesViewModel viewModel =  new ViewModelProvider(this).get(ProfilesViewModel.class);
+        ProfilesViewModel viewModel = new ViewModelProvider(this).get(ProfilesViewModel.class);
         viewModel.getProfile();
-        if (savedInstanceState == null)
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new ProfileFragment()).commit();
+        if (savedInstanceState == null) {
+            selectedFragment=new ProfileFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+        }
 
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Log.d(TAG, "checking location permissions");
 
+        switch (requestCode) {
+            case LOCATION_PERMISSION_REQUEST_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
+                    Log.d(TAG, "permission given");
+                }
+        }
+    }
 
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.log_out:
-                String login_type=sharedPreferences.getString("login_type",null);
+                String login_type = sharedPreferences.getString("login_type", null);
                 mAuth.getInstance().signOut();
-                if(login_type.equals("facebook"))
+                if (login_type.equals("facebook"))
                     LoginManager.getInstance().logOut();
                 logout();
 
@@ -88,29 +103,29 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater=getMenuInflater();
-        menuInflater.inflate(R.menu.main_menu,menu);
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.main_menu, menu);
         return true;
 
     }
-public  boolean isServicesOk(){
-    Log.d(TAG,"isServicesOk: checking google services version");
-    int available= GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(MainActivity.this);
-    if(available== ConnectionResult.SUCCESS){
-        Log.d(TAG,"isServicesOk: Google play services are working");
-        return  true;
+
+    public boolean isServicesOk() {
+        Log.d(TAG, "isServicesOk: checking google services version");
+        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(MainActivity.this);
+        if (available == ConnectionResult.SUCCESS) {
+            Log.d(TAG, "isServicesOk: Google play services are working");
+            return true;
+        } else if (GoogleApiAvailability.getInstance().isUserResolvableError(available)) {
+            Log.d(TAG, "isServicesOk: an error occured but we can fix it");
+            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(MainActivity.this, available, ERROR_DIALOG_REQUEST);
+            dialog.show();
+        } else {
+            Toast.makeText(getApplicationContext(), getString(R.string.error_map), Toast.LENGTH_LONG).show();
+        }
+        return false;
     }
-    else if (GoogleApiAvailability.getInstance().isUserResolvableError(available)){
-        Log.d(TAG,"isServicesOk: an error occured but we can fix it");
-        Dialog dialog=GoogleApiAvailability.getInstance().getErrorDialog(MainActivity.this,available,ERROR_DIALOG_REQUEST);
-        dialog.show();
-    }
-    else{
-        Toast.makeText(getApplicationContext(),getString(R.string.error_map),Toast.LENGTH_LONG).show();
-    }
-    return false;
-}
-    private BottomNavigationView.OnNavigationItemSelectedListener navListener= new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -119,27 +134,50 @@ public  boolean isServicesOk(){
         }
     };
 
-    private void setFragment(int id){
-        Fragment selectedFragment=null;
-        switch(id){
+    private void setFragment(int id) {
+
+        switch (id) {
             case R.id.profile:
-                selectedFragment=new ProfileFragment();
+                selectedFragment = new ProfileFragment();
                 break;
             case R.id.start:
-                selectedFragment=new GuideFragment();
+                selectedFragment = new GuideFragment();
                 break;
             case R.id.map:
-                selectedFragment=new MapFragment();
+                if(isServicesOk())
+                    selectedFragment = new MapFragment();
                 break;
         }
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,selectedFragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
 
     }
 
+    private void getLocationPermission() {
+        Log.d(TAG, "getLocationPermission:getting permissions");
+        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION};
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-    private void logout(){
+
+        } else {
+            ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
+
+        }
+    }
+
+    private void logout() {
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ProfileFragment.REQUEST_CHECK_SETTINGS){
+            ProfileFragment pf= (ProfileFragment) selectedFragment;
+            pf.onActivityResult(requestCode, resultCode, data);
+        }
+        else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

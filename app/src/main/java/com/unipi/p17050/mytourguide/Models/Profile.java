@@ -9,7 +9,6 @@ public class Profile {
     private ArrayList<String> interests = new ArrayList<String>();
     private ArrayList<Integer> accessibility = new ArrayList<>();
     private String age_group;
-    private float distance = -1;
     private boolean children;
 
     public boolean isChildren() {
@@ -18,14 +17,6 @@ public class Profile {
 
     public void setChildren(boolean children) {
         this.children = children;
-    }
-
-    public float getDistance() {
-        return distance;
-    }
-
-    public void setDistance(float distance) {
-        this.distance = distance;
     }
 
     public String getAge_group() {

@@ -19,7 +19,33 @@ import com.unipi.p17050.mytourguide.Models.Profile;
 public class ProfilesViewModel extends ViewModel {
     private String TAG = this.getClass().getSimpleName();
     private MutableLiveData<Profile> profile;
+    private   MutableLiveData<Float>  mLongitude=new MutableLiveData<Float>();
+    private   MutableLiveData<Float>  mLatitude=new MutableLiveData<Float>();
+    private MutableLiveData<Float> distance=new MutableLiveData<Float>();
 
+    public MutableLiveData<Float> getmLongitude() {
+        return mLongitude;
+    }
+
+    public void setmLongitude(float mLongitude) {
+        this.mLongitude.postValue(mLongitude);
+    }
+
+    public MutableLiveData<Float> getmLatitude() {
+        return mLatitude;
+    }
+
+    public void setmLatitude(float mLatitude) {
+        this.mLatitude.postValue(mLatitude);
+    }
+
+    public MutableLiveData<Float> getDistance() {
+        return distance;
+    }
+
+    public void setDistance(float distance) {
+        this.distance.postValue(distance);
+    }
 
     public MutableLiveData<Profile> getProfile() {
         Log.i(TAG, "Get profile");
@@ -27,7 +53,7 @@ public class ProfilesViewModel extends ViewModel {
             profile = new MutableLiveData<>();
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-            mDatabase.child("Profiles").child(user.getUid()).addValueEventListener(new ValueEventListener() {
+            mDatabase.child("Profiles").child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.exists())
