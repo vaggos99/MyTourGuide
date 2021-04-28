@@ -33,7 +33,7 @@ public class GuideFragment extends Fragment {
     private View view;
 
     private MyDestinationsViewModel destviewModel;
-    private Profile profile;
+
     private ArrayList<Destination> destinations;
 
     @Override
@@ -46,14 +46,12 @@ public class GuideFragment extends Fragment {
 
         ProfilesViewModel viewModel = new ViewModelProvider(requireActivity()).get(ProfilesViewModel.class);
         destviewModel = new ViewModelProvider(requireActivity()).get(MyDestinationsViewModel.class);
-        viewModel.getDistance();
-        viewModel.getProfile().observe(getViewLifecycleOwner(), new Observer<Profile>() {
-            @Override
-            public void onChanged(Profile prof) {
-                profile = prof;
-                destviewModel.setDestinations(profile);
-            }
-        });
+        float distance =viewModel.getDistance().getValue();
+        float latitude=viewModel.getmLatitude().getValue();
+        float longitude=viewModel.getmLongitude().getValue();
+        Profile profile =viewModel.getProfile().getValue();
+        destviewModel.setDestinations(profile,distance,longitude,latitude);
+
 
         destviewModel.getDestinations().observe(getViewLifecycleOwner(), new Observer<List<Destination>>() {
             @Override
@@ -73,7 +71,7 @@ public class GuideFragment extends Fragment {
 
 
     private void setUpAdapter(ArrayList<Destination> dest) {
-        DestinationsRecyclerViewAdapter adapter = new DestinationsRecyclerViewAdapter();
+        DestinationsRecyclerViewAdapter adapter = new DestinationsRecyclerViewAdapter(getActivity());
         adapter.setDestinations(dest);
         destinationsRV.setAdapter(adapter);
         destinationsRV.setLayoutManager(new LinearLayoutManager(getContext()));

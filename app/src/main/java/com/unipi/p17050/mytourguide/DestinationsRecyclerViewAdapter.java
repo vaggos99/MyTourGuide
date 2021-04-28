@@ -1,5 +1,6 @@
 package com.unipi.p17050.mytourguide;
 
+import android.content.Context;
 import android.transition.AutoTransition;
 import android.transition.TransitionManager;
 import android.view.LayoutInflater;
@@ -21,9 +22,10 @@ import java.util.ArrayList;
 
 public class DestinationsRecyclerViewAdapter extends RecyclerView.Adapter<DestinationsRecyclerViewAdapter.ViewHolder>{
     private ArrayList<Destination> destinations=new ArrayList<>();
+    private Context context;
 
-
-    public DestinationsRecyclerViewAdapter() {
+    public DestinationsRecyclerViewAdapter(Context context) {
+        this.context=context;
     }
 
     @NonNull
@@ -36,7 +38,8 @@ public class DestinationsRecyclerViewAdapter extends RecyclerView.Adapter<Destin
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.nameTxt.setText(destinations.get(position).getName());
+        int resId = context.getResources().getIdentifier(destinations.get(position).getName(),null,context.getPackageName());
+        holder.nameTxt.setText(context.getString(resId));
         holder.typeTxt.setText(destinations.get(position).getType());
         Picasso.get().load(destinations.get(position).getImage()).into(holder.imageview);
         holder.drop_button.setOnClickListener(new View.OnClickListener() {
@@ -53,6 +56,7 @@ public class DestinationsRecyclerViewAdapter extends RecyclerView.Adapter<Destin
                 }
             }
         });
+
     }
 
     @Override

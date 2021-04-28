@@ -358,6 +358,8 @@ public class ProfileFragment extends Fragment {
                     // requests here.
                     Log.d(TAG, "askForGps:GPS already enabled");
                     slider.setEnabled(true);
+                    if(viewModel.getDistance().getValue()<1)
+                        viewModel.setDistance(1);
                     getLocation();
                 } catch (ApiException exception) {
                     switch (exception.getStatusCode()) {
@@ -438,6 +440,8 @@ public class ProfileFragment extends Fragment {
                         // All required changes were successfully made
                         getLocation();
                         slider.setEnabled(true);
+                        if(viewModel.getDistance().getValue()<1)
+                            viewModel.setDistance(1);
                         Toast.makeText(getActivity(), "Location enabled by user!", Toast.LENGTH_LONG).show();
                         break;
 

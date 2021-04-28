@@ -1,5 +1,6 @@
 package com.unipi.p17050.mytourguide.ViewModels;
 
+import android.location.Location;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -7,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,11 +28,11 @@ public class MyDestinationsViewModel extends ViewModel {
     private MutableLiveData<List<Destination>> destinations;
 
 
-    public void setDestinations(Profile profile) {
+    public void setDestinations(Profile profile,float distance,float longitude,float latitude) {
         Log.i(TAG, "update list");
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        Log.i(TAG, "Get destinations");
+        Log.d(TAG, "Get destinations");
         if (destinations == null) {
             Log.i(TAG, " destinations NULL");
             destinations = new MutableLiveData<>();
@@ -49,22 +51,27 @@ public class MyDestinationsViewModel extends ViewModel {
                 Log.d("TAG", "fetching destinations");
                 ArrayList<Double> scores = new ArrayList<>();
                 ArrayList<Destination> dest = new ArrayList<>();
-
+                LatLng location=new LatLng(latitude,longitude);
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Destination destination = dataSnapshot.getValue(Destination.class);
+                    float[] resultArray = new float[99];
 
+                    Location.distanceBetween(location.latitude, location.longitude, destination.getLatitude(), destination.getLongitude(), resultArray);
+                    if(resultArray[0]/1000<distance || distance<1) {
+                        Log.d("TAG", "destination calculate");
+                        scores.add(Jaccard.calculate(profile, destination));
 
-                    Log.d("TAG", "destination calculate");
-                    scores.add(Jaccard.calculate(profile, destination));
-
-                    dest.add(destination);
-
+                        dest.add(destination);
+                    }
 
                 }
 
                 QuickSort quickSort = new QuickSort(dest, scores);
-
-                destinations.postValue(new ArrayList<Destination>(quickSort.startQuicksort().subList(0, 3)));
+                dest=quickSort.startQuicksort();
+                if(dest.size()>3)
+                    destinations.postValue(new ArrayList<Destination>(dest.subList(0, 3)));
+                else
+                    destinations.postValue(dest);
 
             }
 

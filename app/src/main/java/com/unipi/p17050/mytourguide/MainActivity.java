@@ -43,7 +43,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private FirebaseAuth mAuth;
+    private String TAG_MY_FRAGMENT;
     private SharedPreferences sharedPreferences;
     private BottomNavigationView bnv;
     private static final String TAG = "MainActivity";
@@ -66,7 +66,12 @@ public class MainActivity extends AppCompatActivity {
         viewModel.getProfile();
         if (savedInstanceState == null) {
             selectedFragment=new ProfileFragment();
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+            TAG_MY_FRAGMENT="profile";
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment,TAG_MY_FRAGMENT).commit();
+        }
+        else{
+            TAG_MY_FRAGMENT=savedInstanceState.getString("TAG_MY_FRAGMENT","profile");
+            selectedFragment =  getSupportFragmentManager().findFragmentByTag(TAG_MY_FRAGMENT);
         }
 
     }
@@ -90,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.log_out:
                 String login_type = sharedPreferences.getString("login_type", null);
-                mAuth.getInstance().signOut();
+                FirebaseAuth.getInstance().signOut();
                 if (login_type.equals("facebook"))
                     LoginManager.getInstance().logOut();
                 logout();
@@ -138,17 +143,20 @@ public class MainActivity extends AppCompatActivity {
 
         switch (id) {
             case R.id.profile:
+                TAG_MY_FRAGMENT="profile";
                 selectedFragment = new ProfileFragment();
                 break;
             case R.id.start:
+                TAG_MY_FRAGMENT="guide";
                 selectedFragment = new GuideFragment();
                 break;
             case R.id.map:
                 if(isServicesOk())
+                    TAG_MY_FRAGMENT="map";
                     selectedFragment = new MapFragment();
                 break;
         }
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment,TAG_MY_FRAGMENT).commit();
 
     }
 
@@ -179,5 +187,11 @@ public class MainActivity extends AppCompatActivity {
         else {
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("TAG_MY_FRAGMENT", TAG_MY_FRAGMENT);
+
     }
 }

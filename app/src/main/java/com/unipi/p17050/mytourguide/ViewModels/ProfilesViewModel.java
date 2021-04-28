@@ -24,6 +24,8 @@ public class ProfilesViewModel extends ViewModel {
     private MutableLiveData<Float> distance=new MutableLiveData<Float>();
 
     public MutableLiveData<Float> getmLongitude() {
+        if(mLongitude.getValue()==null)
+            mLongitude.setValue((float) 0);
         return mLongitude;
     }
 
@@ -32,6 +34,8 @@ public class ProfilesViewModel extends ViewModel {
     }
 
     public MutableLiveData<Float> getmLatitude() {
+        if(mLatitude.getValue()==null)
+            mLatitude.setValue((float) 0);
         return mLatitude;
     }
 
@@ -40,6 +44,8 @@ public class ProfilesViewModel extends ViewModel {
     }
 
     public MutableLiveData<Float> getDistance() {
+        if(distance.getValue()==null)
+            distance.postValue((float) -1);
         return distance;
     }
 
