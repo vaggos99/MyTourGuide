@@ -11,6 +11,7 @@ import java.util.Set;
 public class Jaccard {
     public static double calculate(Profile profile, Destination destination)
     {
+
         ArrayList profile_interests=new ArrayList(profile.getInterests());
         ArrayList destination_interests=new ArrayList(destination.getCategory());
         String profile_age_group=profile.getAge_group();

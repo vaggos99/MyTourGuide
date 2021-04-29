@@ -15,6 +15,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.unipi.p17050.mytourguide.Models.Destination;
+import com.unipi.p17050.mytourguide.Models.My_Location;
 import com.unipi.p17050.mytourguide.Models.Profile;
 import com.unipi.p17050.mytourguide.Others.Jaccard;
 import com.unipi.p17050.mytourguide.Others.QuickSort;
@@ -28,7 +29,7 @@ public class MyDestinationsViewModel extends ViewModel {
     private MutableLiveData<List<Destination>> destinations;
 
 
-    public void setDestinations(Profile profile,float distance,float longitude,float latitude) {
+    public void setDestinations(Profile profile, float distance, My_Location my_location) {
         Log.i(TAG, "update list");
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
@@ -51,12 +52,12 @@ public class MyDestinationsViewModel extends ViewModel {
                 Log.d("TAG", "fetching destinations");
                 ArrayList<Double> scores = new ArrayList<>();
                 ArrayList<Destination> dest = new ArrayList<>();
-                LatLng location=new LatLng(latitude,longitude);
+
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Destination destination = dataSnapshot.getValue(Destination.class);
                     float[] resultArray = new float[99];
 
-                    Location.distanceBetween(location.latitude, location.longitude, destination.getLatitude(), destination.getLongitude(), resultArray);
+                    Location.distanceBetween(my_location.getLatitude(), my_location.getLongitude(), destination.getLocation().getLatitude(), destination.getLocation().getLongitude(), resultArray);
                     if(resultArray[0]/1000<distance || distance<1) {
                         Log.d("TAG", "destination calculate");
                         scores.add(Jaccard.calculate(profile, destination));

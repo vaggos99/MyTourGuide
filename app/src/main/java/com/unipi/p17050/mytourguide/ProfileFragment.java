@@ -51,6 +51,7 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.slider.Slider;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputLayout;
+import com.unipi.p17050.mytourguide.Models.My_Location;
 import com.unipi.p17050.mytourguide.Models.Profile;
 import com.unipi.p17050.mytourguide.ViewModels.ProfilesViewModel;
 
@@ -401,8 +402,8 @@ public class ProfileFragment extends Fragment {
                         // Got last known location. In some rare situations this can be null.
                         if (location != null) {
                             // Logic to handle location object
-                            viewModel.setmLatitude((float) location.getLatitude());
-                            viewModel.setmLongitude((float) location.getLongitude());
+                            My_Location loc = new My_Location(location.getLatitude(),location.getLongitude());
+                            viewModel.setLocation(loc);
                         } else {
                             final LocationRequest locationRequest = LocationRequest.create();
                             locationRequest.setInterval(10000);
@@ -416,8 +417,8 @@ public class ProfileFragment extends Fragment {
                                         return;
                                     }
                                     Location mLastKnownLocation = locationResult.getLastLocation();
-                                    viewModel.setmLatitude((float) mLastKnownLocation.getLatitude());
-                                    viewModel.setmLongitude((float) mLastKnownLocation.getLongitude());
+                                    My_Location loc =new My_Location(mLastKnownLocation.getLatitude(),mLastKnownLocation.getLongitude());
+                                    viewModel.setLocation(loc);
                                     mFusedclient.removeLocationUpdates(mLocationCallback);
                                 }
                             };

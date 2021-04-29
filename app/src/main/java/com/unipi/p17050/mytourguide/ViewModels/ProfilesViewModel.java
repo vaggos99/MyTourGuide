@@ -14,33 +14,23 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.unipi.p17050.mytourguide.Models.My_Location;
 import com.unipi.p17050.mytourguide.Models.Profile;
 
 public class ProfilesViewModel extends ViewModel {
     private String TAG = this.getClass().getSimpleName();
     private MutableLiveData<Profile> profile;
-    private   MutableLiveData<Float>  mLongitude=new MutableLiveData<Float>();
-    private   MutableLiveData<Float>  mLatitude=new MutableLiveData<Float>();
+   private MutableLiveData<My_Location> location=new MutableLiveData<>();
     private MutableLiveData<Float> distance=new MutableLiveData<Float>();
 
-    public MutableLiveData<Float> getmLongitude() {
-        if(mLongitude.getValue()==null)
-            mLongitude.setValue((float) 0);
-        return mLongitude;
+    public MutableLiveData<My_Location> getLocation() {
+        if(location.getValue()==null)
+            location.setValue(new My_Location());
+        return location;
     }
 
-    public void setmLongitude(float mLongitude) {
-        this.mLongitude.postValue(mLongitude);
-    }
-
-    public MutableLiveData<Float> getmLatitude() {
-        if(mLatitude.getValue()==null)
-            mLatitude.setValue((float) 0);
-        return mLatitude;
-    }
-
-    public void setmLatitude(float mLatitude) {
-        this.mLatitude.postValue(mLatitude);
+    public void setLocation(My_Location location) {
+        this.location.postValue(location);
     }
 
     public MutableLiveData<Float> getDistance() {
@@ -90,4 +80,6 @@ public class ProfilesViewModel extends ViewModel {
         super.onCleared();
         Log.i(TAG, "ViewModel Destroyed");
     }
+
+
 }

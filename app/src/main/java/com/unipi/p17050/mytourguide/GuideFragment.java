@@ -16,7 +16,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 
+import com.google.android.gms.maps.model.LatLng;
 import com.unipi.p17050.mytourguide.Models.Destination;
+import com.unipi.p17050.mytourguide.Models.My_Location;
 import com.unipi.p17050.mytourguide.Models.Profile;
 
 import com.unipi.p17050.mytourguide.ViewModels.MyDestinationsViewModel;
@@ -47,10 +49,10 @@ public class GuideFragment extends Fragment {
         ProfilesViewModel viewModel = new ViewModelProvider(requireActivity()).get(ProfilesViewModel.class);
         destviewModel = new ViewModelProvider(requireActivity()).get(MyDestinationsViewModel.class);
         float distance =viewModel.getDistance().getValue();
-        float latitude=viewModel.getmLatitude().getValue();
-        float longitude=viewModel.getmLongitude().getValue();
+        My_Location my_location=viewModel.getLocation().getValue();
+
         Profile profile =viewModel.getProfile().getValue();
-        destviewModel.setDestinations(profile,distance,longitude,latitude);
+        destviewModel.setDestinations(profile,distance,my_location);
 
 
         destviewModel.getDestinations().observe(getViewLifecycleOwner(), new Observer<List<Destination>>() {

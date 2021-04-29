@@ -18,8 +18,25 @@ public class Destination {
     private ArrayList<String> category;
     private ArrayList<String> age_group;
     private int accessibility;
-    private float latitude;
-    private float longitude;
+    private My_Location location;
+    private String type_gr;
+
+
+    public String getType_gr() {
+        return type_gr;
+    }
+
+    public void setType_gr(String type_gr) {
+        this.type_gr = type_gr;
+    }
+
+    public My_Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(My_Location location) {
+        this.location = location;
+    }
 
     public String getName_gr() {
         return name_gr;
@@ -46,21 +63,6 @@ public class Destination {
         this.name = name;
     }
 
-    public float getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(float latitude) {
-        this.latitude = latitude;
-    }
-
-    public float getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(float longitude) {
-        this.longitude = longitude;
-    }
 
     public String getType() {
         return type;
