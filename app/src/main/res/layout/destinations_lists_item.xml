@@ -87,16 +87,16 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:text="Button 1"
-                app:layout_constraintStart_toEndOf="@+id/materialButton"
+                app:layout_constraintStart_toEndOf="@+id/infoButton"
                 app:layout_constraintTop_toBottomOf="@+id/infoTxt" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/materialButton"
+                android:id="@+id/infoButton"
                 style="?attr/borderlessButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Button 2"
+                android:text="Info"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/infoTxt" />
         </androidx.constraintlayout.widget.ConstraintLayout>

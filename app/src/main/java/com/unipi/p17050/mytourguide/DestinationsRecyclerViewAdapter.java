@@ -1,6 +1,7 @@
 package com.unipi.p17050.mytourguide;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.transition.AutoTransition;
 import android.transition.TransitionManager;
 import android.view.LayoutInflater;
@@ -14,11 +15,13 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.squareup.picasso.Picasso;
 import com.unipi.p17050.mytourguide.Models.Destination;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class DestinationsRecyclerViewAdapter extends RecyclerView.Adapter<DestinationsRecyclerViewAdapter.ViewHolder>{
     private ArrayList<Destination> destinations=new ArrayList<>();
@@ -38,8 +41,11 @@ public class DestinationsRecyclerViewAdapter extends RecyclerView.Adapter<Destin
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        int resId = context.getResources().getIdentifier(destinations.get(position).getName(),null,context.getPackageName());
-        holder.nameTxt.setText(context.getString(resId));
+       if(Locale.getDefault().getDisplayLanguage().contains("English"))
+           holder.nameTxt.setText(destinations.get(position).getName());
+       else
+           holder.nameTxt.setText(destinations.get(position).getName_gr());
+
         holder.typeTxt.setText(destinations.get(position).getType());
         Picasso.get().load(destinations.get(position).getImage()).into(holder.imageview);
         holder.drop_button.setOnClickListener(new View.OnClickListener() {
@@ -75,6 +81,7 @@ public class DestinationsRecyclerViewAdapter extends RecyclerView.Adapter<Destin
         private ImageView imageview;
         private ImageButton drop_button;
         private ConstraintLayout expandable_view;
+        private MaterialButton infoButton;
         private MaterialCardView cardView;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -83,6 +90,7 @@ public class DestinationsRecyclerViewAdapter extends RecyclerView.Adapter<Destin
             imageview=itemView.findViewById(R.id.dest_image);
             drop_button=itemView.findViewById(R.id.hide_show_button);
             expandable_view=itemView.findViewById(R.id.expandable_view);
+            infoButton=itemView.findViewById(R.id.infoButton);
             cardView=itemView.findViewById(R.id.card);
         }
     }

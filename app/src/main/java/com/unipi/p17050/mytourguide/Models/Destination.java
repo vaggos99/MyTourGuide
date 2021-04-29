@@ -9,6 +9,7 @@ import java.util.ArrayList;
 public class Destination {
     private String name;
 
+    private String name_gr;
 
     private String image;
 
@@ -19,6 +20,14 @@ public class Destination {
     private int accessibility;
     private float latitude;
     private float longitude;
+
+    public String getName_gr() {
+        return name_gr;
+    }
+
+    public void setName_gr(String name_gr) {
+        this.name_gr = name_gr;
+    }
 
     public ArrayList<String> getAge_group() {
         return age_group;
