@@ -46,6 +46,6 @@
     <string-array name="age_class_array">
         <item>Teen/Adult</item>
         <item>Middle-aged</item>
-        <item>Elderly</item>
+        <item>Elder</item>
     </string-array>
 </resources>

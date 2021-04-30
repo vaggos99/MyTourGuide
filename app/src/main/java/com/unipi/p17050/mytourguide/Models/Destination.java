@@ -13,7 +13,7 @@ public class Destination {
 
     private String image;
 
-
+    private boolean easy_access;
     private String type;
     private ArrayList<String> category;
     private ArrayList<String> age_group;
@@ -21,6 +21,13 @@ public class Destination {
     private My_Location location;
     private String type_gr;
 
+    public boolean isEasy_access() {
+        return easy_access;
+    }
+
+    public void setEasy_access(boolean easy_access) {
+        this.easy_access = easy_access;
+    }
 
     public String getType_gr() {
         return type_gr;

@@ -190,6 +190,7 @@
                     android:layout_height="wrap_content"
 
                     android:text="@string/theater" />
+
                 <com.google.android.material.chip.Chip
                     android:id="@+id/dining"
                     style="@style/Widget.MaterialComponents.Chip.Choice"
@@ -231,12 +232,29 @@
             android:layout_marginTop="10dp"
             android:background="@color/primaryDarkColor" />
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <com.google.android.material.checkbox.MaterialCheckBox
-            android:id="@+id/has_children"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/children" />
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/has_children"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/children"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/has_pushchair"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="I have pushchair"
+                app:layout_constraintStart_toEndOf="@+id/has_children"
+                app:layout_constraintTop_toTopOf="parent"
+                android:visibility="gone"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
         <View
             android:layout_width="match_parent"

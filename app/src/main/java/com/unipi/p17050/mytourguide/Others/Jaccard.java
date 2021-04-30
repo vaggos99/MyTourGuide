@@ -11,17 +11,30 @@ import java.util.Set;
 public class Jaccard {
     public static double calculate(Profile profile, Destination destination)
     {
-
-        ArrayList profile_interests=new ArrayList(profile.getInterests());
-        ArrayList destination_interests=new ArrayList(destination.getCategory());
+        ArrayList profile_interests;
+        ArrayList destination_interests;
+        ArrayList destination_age_group;
         String profile_age_group=profile.getAge_group();
-        ArrayList destination_age_group=new ArrayList(destination.getAge_group());
+        try {
+            profile_interests = new ArrayList(profile.getInterests());
+            destination_interests = new ArrayList(destination.getCategory());
+            destination_age_group = new ArrayList(destination.getAge_group());
+        }
+        catch (NullPointerException e){
+            profile_interests = new ArrayList();
+            destination_interests = new ArrayList();
+            destination_age_group = new ArrayList();
+        }
 
         double union= getUnionOfLists(profile_interests,destination_interests)+destination_age_group.size();
         double intersect=  getIntersectOfLists(profile_interests,destination_interests);
         if(destination_age_group.contains(profile_age_group))
             intersect++;
-
+        if((profile.getAge_group()=="Elder" || profile.isPushchair()) ){
+            if(destination.isEasy_access())
+                intersect++;
+            union++;
+        }
         return intersect/union;
     }
 

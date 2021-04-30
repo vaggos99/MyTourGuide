@@ -74,7 +74,7 @@ public class ProfileFragment extends Fragment {
     private ExpandableLayout c_expandableLayout, e_expandableLayout, s_expandableLayout, r_expandableLayout;
     private Profile profile;
     private Slider slider;
-    private MaterialCheckBox has_children;
+    private MaterialCheckBox has_children,has_pushchair;
     private ProfilesViewModel viewModel;
     private Chip museum_chip, archaeological_chip, stadium_chip, sports_chip, churches_chip, monastery_chip, strolling_chip, shopping_chip, theater_chip, dining_chip;
 
@@ -95,10 +95,9 @@ public class ProfileFragment extends Fragment {
         initializeChips();
         switcher = root.findViewById(R.id.enable_distance);
         slider = root.findViewById(R.id.slider);
-
         age_choices = root.findViewById(R.id.age_choices);
         has_children = root.findViewById(R.id.has_children);
-
+        has_pushchair=root.findViewById(R.id.has_pushchair);
 
         viewModel = new ViewModelProvider(requireActivity()).get(ProfilesViewModel.class);
 
@@ -163,8 +162,11 @@ public class ProfileFragment extends Fragment {
                         break;
                 }
 
-
                 has_children.setChecked(profile.isChildren());
+                if(profile.isChildren()){
+                    has_pushchair.setVisibility(View.VISIBLE);
+                    has_pushchair.setChecked(profile.isPushchair());
+                }
             }
         });
 
@@ -232,21 +234,32 @@ public class ProfileFragment extends Fragment {
 
         });
 
-        onCheckboxClicked(has_children);
-        return root;
-    }
-
-    private void onCheckboxClicked(CheckBox checkBox) {
-        // Is the view now checked?
-        checkBox.setOnClickListener(new View.OnClickListener() {
+        has_children.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 profile.setChildren(((CheckBox) v).isChecked());
+                if(((CheckBox) v).isChecked())
+                    has_pushchair.setVisibility(View.VISIBLE);
+                else {
+                    has_pushchair.setVisibility(View.GONE);
+                    has_pushchair.setChecked(false);
+                    profile.setPushchair(false);
+                }
                 viewModel.setProfile(profile);
             }
         });
 
+        has_pushchair.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                profile.setPushchair(((CheckBox) v).isChecked());
+                viewModel.setProfile(profile);
+            }
+        });
+        return root;
     }
+
+
 
     private void chipClicked(Chip chip, String value) {
         chip.setOnClickListener(new View.OnClickListener() {

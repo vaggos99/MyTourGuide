@@ -61,12 +61,11 @@ public class MyDestinationsViewModel extends ViewModel {
                     if(resultArray[0]/1000<distance || distance<1) {
                         Log.d("TAG", "destination calculate");
                         scores.add(Jaccard.calculate(profile, destination));
-
                         dest.add(destination);
                     }
 
                 }
-
+                System.out.println(scores);
                 QuickSort quickSort = new QuickSort(dest, scores);
                 dest=quickSort.startQuicksort();
                 if(dest.size()>3)

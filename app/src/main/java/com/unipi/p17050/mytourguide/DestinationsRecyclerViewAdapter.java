@@ -41,12 +41,15 @@ public class DestinationsRecyclerViewAdapter extends RecyclerView.Adapter<Destin
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-       if(Locale.getDefault().getDisplayLanguage().contains("English"))
+       if(Locale.getDefault().getDisplayLanguage().contains("English")) {
            holder.nameTxt.setText(destinations.get(position).getName());
-       else
+           holder.typeTxt.setText(destinations.get(position).getType());
+       }
+       else {
            holder.nameTxt.setText(destinations.get(position).getName_gr());
+           holder.typeTxt.setText(destinations.get(position).getType_gr());
+       }
 
-        holder.typeTxt.setText(destinations.get(position).getType());
         Picasso.get().load(destinations.get(position).getImage()).into(holder.imageview);
         holder.drop_button.setOnClickListener(new View.OnClickListener() {
             @Override

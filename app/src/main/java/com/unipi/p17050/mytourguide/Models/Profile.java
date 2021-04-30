@@ -9,7 +9,17 @@ public class Profile {
     private ArrayList<String> interests = new ArrayList<String>();
     private ArrayList<Integer> accessibility = new ArrayList<>();
     private String age_group;
+    private boolean pushchair;
     private boolean children;
+
+
+    public boolean isPushchair() {
+        return pushchair;
+    }
+
+    public void setPushchair(boolean pushchair) {
+        this.pushchair = pushchair;
+    }
 
     public boolean isChildren() {
         return children;
