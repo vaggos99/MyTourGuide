@@ -44,10 +44,12 @@ public class DestinationsRecyclerViewAdapter extends RecyclerView.Adapter<Destin
        if(Locale.getDefault().getDisplayLanguage().contains("English")) {
            holder.nameTxt.setText(destinations.get(position).getName());
            holder.typeTxt.setText(destinations.get(position).getType());
+           holder.infoTxt.setText(destinations.get(position).getInfo());
        }
        else {
            holder.nameTxt.setText(destinations.get(position).getName_gr());
            holder.typeTxt.setText(destinations.get(position).getType_gr());
+           holder.infoTxt.setText(destinations.get(position).getInfo_gr());
        }
 
         Picasso.get().load(destinations.get(position).getImage()).into(holder.imageview);
@@ -79,17 +81,19 @@ public class DestinationsRecyclerViewAdapter extends RecyclerView.Adapter<Destin
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView nameTxt;
-        private TextView typeTxt;
-        private ImageView imageview;
-        private ImageButton drop_button;
-        private ConstraintLayout expandable_view;
-        private MaterialButton infoButton;
-        private MaterialCardView cardView;
+        private final TextView nameTxt;
+        private final TextView typeTxt;
+        private final TextView infoTxt;
+        private final ImageView imageview;
+        private final ImageButton drop_button;
+        private final ConstraintLayout expandable_view;
+        private final MaterialButton infoButton;
+        private final MaterialCardView cardView;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             nameTxt=itemView.findViewById(R.id.txtName);
             typeTxt=itemView.findViewById(R.id.txtType);
+            infoTxt=itemView.findViewById(R.id.infoTxt);
             imageview=itemView.findViewById(R.id.dest_image);
             drop_button=itemView.findViewById(R.id.hide_show_button);
             expandable_view=itemView.findViewById(R.id.expandable_view);

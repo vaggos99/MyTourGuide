@@ -40,26 +40,22 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.SettingsClient;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.model.LatLng;
+
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
+
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.slider.Slider;
 import com.google.android.material.switchmaterial.SwitchMaterial;
-import com.google.android.material.textfield.TextInputLayout;
+
 import com.unipi.p17050.mytourguide.Models.My_Location;
 import com.unipi.p17050.mytourguide.Models.Profile;
 import com.unipi.p17050.mytourguide.ViewModels.ProfilesViewModel;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
 
-import java.util.concurrent.Executor;
-
-import static android.app.Activity.RESULT_OK;
 
 
 public class ProfileFragment extends Fragment {
@@ -90,7 +86,12 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         root = inflater.inflate(R.layout.fragment_profile, container, false);
+        viewModel = new ViewModelProvider(requireActivity()).get(ProfilesViewModel.class);
         mFusedclient = LocationServices.getFusedLocationProviderClient(getActivity());
+        if (isLocationPermissionGranded() && viewModel.isShown()==false) {
+            askForGps();
+            viewModel.setShown(true);
+        }
         initializeExpendables();
         initializeChips();
         switcher = root.findViewById(R.id.enable_distance);
@@ -99,7 +100,7 @@ public class ProfileFragment extends Fragment {
         has_children = root.findViewById(R.id.has_children);
         has_pushchair=root.findViewById(R.id.has_pushchair);
 
-        viewModel = new ViewModelProvider(requireActivity()).get(ProfilesViewModel.class);
+
 
         viewModel.getProfile().observe(getViewLifecycleOwner(), new Observer<Profile>() {
             @Override
@@ -112,7 +113,7 @@ public class ProfileFragment extends Fragment {
                             museum_chip.setSelected(true);
                             museum_chip.setChecked(true);
                             break;
-                        case "archaeological places":
+                        case "monument":
                             archaeological_chip.setSelected(true);
                             archaeological_chip.setChecked(true);
                             break;
@@ -120,7 +121,7 @@ public class ProfileFragment extends Fragment {
                             stadium_chip.setSelected(true);
                             stadium_chip.setChecked(true);
                             break;
-                        case "sport places":
+                        case "sports":
                             sports_chip.setSelected(true);
                             sports_chip.setChecked(true);
                             break;
@@ -181,6 +182,12 @@ public class ProfileFragment extends Fragment {
                     slider.setEnabled(true);
                     slider.setValue(distance);
                 }
+            }
+        });
+        viewModel.getLocation().observe(getViewLifecycleOwner(),my_location ->{
+            if(my_location!=null){
+                if(viewModel.getDistance().getValue()<1 && switcher.isChecked())
+                    viewModel.setDistance(1);
             }
         });
         age_choices.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -287,11 +294,7 @@ public class ProfileFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (button.isSelected()) {
-                    button.setSelected(false);
-                } else {
-                    button.setSelected(true);
-                }
+                button.setSelected(!button.isSelected());
 
                 expandableLayout.toggle();
             }
@@ -331,8 +334,8 @@ public class ProfileFragment extends Fragment {
         theater_chip = root.findViewById(R.id.theater);
         dining_chip = root.findViewById(R.id.dining);
         chipClicked(museum_chip, "museums");
-        chipClicked(archaeological_chip, "archaeological places");
-        chipClicked(sports_chip, "sport places");
+        chipClicked(archaeological_chip, "monument");
+        chipClicked(sports_chip, "sports");
         chipClicked(stadium_chip, "stadiums");
         chipClicked(churches_chip, "churches");
         chipClicked(monastery_chip, "monasteries");
@@ -344,7 +347,6 @@ public class ProfileFragment extends Fragment {
 
     private boolean isLocationPermissionGranded() {
         Log.d(TAG, "getLocationPermission:getting permissions");
-        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION};
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
             return true;
         return false;
@@ -371,9 +373,6 @@ public class ProfileFragment extends Fragment {
                     // All location settings are satisfied. The client can initialize location
                     // requests here.
                     Log.d(TAG, "askForGps:GPS already enabled");
-                    slider.setEnabled(true);
-                    if(viewModel.getDistance().getValue()<1)
-                        viewModel.setDistance(1);
                     getLocation();
                 } catch (ApiException exception) {
                     switch (exception.getStatusCode()) {
@@ -453,17 +452,14 @@ public class ProfileFragment extends Fragment {
                         Log.d(TAG, "askForGps:GPS  enabled");
                         // All required changes were successfully made
                         getLocation();
-                        slider.setEnabled(true);
-                        if(viewModel.getDistance().getValue()<1)
-                            viewModel.setDistance(1);
-                        Toast.makeText(getActivity(), "Location enabled by user!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), getString(R.string.gps_enabled), Toast.LENGTH_LONG).show();
                         break;
 
                     case Activity.RESULT_CANCELED:
                         // The user was asked to change settings, but chose not to
                         Log.d(TAG, "askForGps:GPS  denied");
                         switcher.setChecked(false);
-                        Toast.makeText(getActivity(), "Location not enabled, user cancelled.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), getString(R.string.gps_denied), Toast.LENGTH_LONG).show();
                         break;
                     default:
                         switcher.setChecked(false);

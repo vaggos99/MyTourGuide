@@ -12,7 +12,8 @@ public class Destination {
     private String name_gr;
 
     private String image;
-
+    private String info;
+    private String info_gr;
     private boolean easy_access;
     private String type;
     private ArrayList<String> category;
@@ -20,6 +21,22 @@ public class Destination {
     private int accessibility;
     private My_Location location;
     private String type_gr;
+
+    public String getInfo_gr() {
+        return info_gr;
+    }
+
+    public void setInfo_gr(String info_gr) {
+        this.info_gr = info_gr;
+    }
+
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
+    }
 
     public boolean isEasy_access() {
         return easy_access;

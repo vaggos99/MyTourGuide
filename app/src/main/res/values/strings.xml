@@ -15,6 +15,8 @@
     <string name="search_place">Search a place</string>
     <string name="google_api" translatable="false">AIzaSyAgxuI0TDOkNf0WurR3Rsqzn6Hxz0s87lo</string>
     <string name="gps_perrmissions">Enable gps usage to find your location</string>
+    <string name="gps_enabled">You have enabled the gps!</string>
+    <string name="gps_denied">You have denied the use of gps!</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="Temple_of_Hephaestus">Temple of Hephaestus</string>
@@ -41,7 +43,7 @@
     <string name="dining">Coffee/Dining</string>
     <string translatable="false" name="shopping">Shopping</string>
     <string name="dest_image">Image of place</string>
-
+    <string name="pushchair">I have pushchair</string>
 
     <string-array name="age_class_array">
         <item>Teen/Adult</item>

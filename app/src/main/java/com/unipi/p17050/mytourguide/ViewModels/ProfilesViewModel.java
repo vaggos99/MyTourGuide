@@ -18,14 +18,21 @@ import com.unipi.p17050.mytourguide.Models.My_Location;
 import com.unipi.p17050.mytourguide.Models.Profile;
 
 public class ProfilesViewModel extends ViewModel {
-    private String TAG = this.getClass().getSimpleName();
+    private final String TAG = this.getClass().getSimpleName();
     private MutableLiveData<Profile> profile;
-   private MutableLiveData<My_Location> location=new MutableLiveData<>();
-    private MutableLiveData<Float> distance=new MutableLiveData<Float>();
+    private MutableLiveData<My_Location> location=new MutableLiveData<>();
+    private MutableLiveData<Float> distance=new MutableLiveData<>();
+    private boolean shown;
+
+    public boolean isShown() {
+        return shown;
+    }
+
+    public void setShown(boolean shown) {
+        this.shown = shown;
+    }
 
     public MutableLiveData<My_Location> getLocation() {
-        if(location.getValue()==null)
-            location.setValue(new My_Location());
         return location;
     }
 
@@ -63,6 +70,8 @@ public class ProfilesViewModel extends ViewModel {
                 }
             });
         }
+        if(profile.getValue()==null)
+            profile.postValue(new Profile());
         return profile;
     }
 
@@ -72,6 +81,7 @@ public class ProfilesViewModel extends ViewModel {
         this.profile.setValue(profile);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+        assert user != null;
         mDatabase.child("Profiles").child(user.getUid()).setValue(profile);
     }
 

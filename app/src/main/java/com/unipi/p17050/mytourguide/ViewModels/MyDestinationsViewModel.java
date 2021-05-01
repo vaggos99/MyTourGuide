@@ -2,13 +2,11 @@ package com.unipi.p17050.mytourguide.ViewModels;
 
 import android.location.Location;
 import android.util.Log;
-import android.widget.Toast;
+
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-
-import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -19,13 +17,11 @@ import com.unipi.p17050.mytourguide.Models.My_Location;
 import com.unipi.p17050.mytourguide.Models.Profile;
 import com.unipi.p17050.mytourguide.Others.Jaccard;
 import com.unipi.p17050.mytourguide.Others.QuickSort;
-import com.unipi.p17050.mytourguide.R;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class MyDestinationsViewModel extends ViewModel {
-    private String TAG = this.getClass().getSimpleName();
+    private final String TAG = this.getClass().getSimpleName();
     private MutableLiveData<List<Destination>> destinations;
 
 
@@ -56,22 +52,43 @@ public class MyDestinationsViewModel extends ViewModel {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Destination destination = dataSnapshot.getValue(Destination.class);
                     float[] resultArray = new float[99];
+                    double score=Jaccard.calculate(profile, destination);
+                    try {
+                        Location.distanceBetween(my_location.getLatitude(), my_location.getLongitude(), destination.getLocation().getLatitude(), destination.getLocation().getLongitude(), resultArray);
+                        if (resultArray[0] / 1000 < distance || distance < 1) {
+                            Log.d("TAG", "destination calculate");
 
-                    Location.distanceBetween(my_location.getLatitude(), my_location.getLongitude(), destination.getLocation().getLatitude(), destination.getLocation().getLongitude(), resultArray);
-                    if(resultArray[0]/1000<distance || distance<1) {
-                        Log.d("TAG", "destination calculate");
-                        scores.add(Jaccard.calculate(profile, destination));
-                        dest.add(destination);
+                            if (profile.isChildren() || profile.getAge_group().equals("Elder")) {
+                                score = score * 3000 / resultArray[0];
+                                if (score > 0.2) {
+                                    scores.add(score);
+                                    dest.add(destination);
+                                }
+                            } else {
+                                if (score > 0.3) {
+                                    scores.add(score);
+                                    dest.add(destination);
+                                }
+
+                            }
+                        }
+                    }
+                    catch (NullPointerException e){
+                        Log.d("TAG", "destination calculate without location");
+                        if(score>0.3) {
+                            scores.add(score);
+                            dest.add(destination);
+                        }
+
                     }
 
                 }
-                System.out.println(scores);
+
                 QuickSort quickSort = new QuickSort(dest, scores);
+
                 dest=quickSort.startQuicksort();
-                if(dest.size()>3)
-                    destinations.postValue(new ArrayList<Destination>(dest.subList(0, 3)));
-                else
-                    destinations.postValue(dest);
+                System.out.println(scores);
+                destinations.postValue(dest);
 
             }
 

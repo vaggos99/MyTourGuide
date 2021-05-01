@@ -34,6 +34,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 import com.unipi.p17050.mytourguide.Models.Profile;
 import com.unipi.p17050.mytourguide.ViewModels.ProfilesViewModel;
 
@@ -54,16 +55,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         FirebaseUser user;
         user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null)
             logout();
+        else
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         getLocationPermission();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         bnv = findViewById(R.id.bottom_navigation);
         bnv.setOnNavigationItemSelectedListener(navListener);
         ProfilesViewModel viewModel = new ViewModelProvider(this).get(ProfilesViewModel.class);
-        viewModel.getProfile();
+        if(user!=null)
+            viewModel.getProfile();
         if (savedInstanceState == null) {
             selectedFragment=new ProfileFragment();
             TAG_MY_FRAGMENT="profile";
