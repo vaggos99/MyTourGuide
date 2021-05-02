@@ -56,12 +56,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FirebaseUser user;
-        user = FirebaseAuth.getInstance().getCurrentUser();
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null)
             logout();
-        else
-            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         getLocationPermission();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         bnv = findViewById(R.id.bottom_navigation);
@@ -178,6 +176,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void logout() {
+        FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         startActivity(intent);
         finish();
