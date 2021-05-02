@@ -48,7 +48,7 @@ public class MyDestinationsViewModel extends ViewModel {
                 Log.d("TAG", "fetching destinations");
                 ArrayList<Double> scores = new ArrayList<>();
                 ArrayList<Destination> dest = new ArrayList<>();
-
+                int i=0;
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Destination destination = dataSnapshot.getValue(Destination.class);
                     float[] resultArray = new float[99];
@@ -59,8 +59,8 @@ public class MyDestinationsViewModel extends ViewModel {
                             Log.d("TAG", "destination calculate");
 
                             if (profile.isChildren() || profile.getAge_group().equals("Elder")) {
-                                score = score * 3000 / resultArray[0];
-                                if (score > 0.2) {
+                                score = score * 1000 / resultArray[0];
+                                if (score > 0.3) {
                                     scores.add(score);
                                     dest.add(destination);
                                 }
@@ -81,13 +81,14 @@ public class MyDestinationsViewModel extends ViewModel {
                         }
 
                     }
-
+                    i++;
                 }
 
                 QuickSort quickSort = new QuickSort(dest, scores);
 
                 dest=quickSort.startQuicksort();
                 System.out.println(scores);
+                System.out.println(i);
                 destinations.postValue(dest);
 
             }

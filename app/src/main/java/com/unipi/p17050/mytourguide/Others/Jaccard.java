@@ -27,10 +27,10 @@ public class Jaccard {
         }
 
         double union= getUnionOfLists(profile_interests,destination_interests)+destination_age_group.size();
-        double intersect=  getIntersectOfLists(profile_interests,destination_interests);
+        double intersect=  1.5*getIntersectOfLists(profile_interests,destination_interests);
         if(destination_age_group.contains(profile_age_group))
             intersect++;
-        if((profile.getAge_group()=="Elder" || profile.isPushchair()) ){
+        if((profile.getAge_group().equals("Elder") || profile.isPushchair()) ){
             if(destination.isEasy_access())
                 intersect++;
             union++;

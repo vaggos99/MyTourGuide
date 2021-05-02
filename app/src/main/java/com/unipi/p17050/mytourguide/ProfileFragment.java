@@ -3,10 +3,12 @@ package com.unipi.p17050.mytourguide;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -91,6 +93,13 @@ public class ProfileFragment extends Fragment {
         if (isLocationPermissionGranded() && viewModel.isShown()==false) {
             askForGps();
             viewModel.setShown(true);
+        }
+        else{
+            final LocationManager manager = (LocationManager) getActivity(). getSystemService(Context. LOCATION_SERVICE);;
+
+            if ( manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+                getLocation();
+            }
         }
         initializeExpendables();
         initializeChips();
@@ -217,8 +226,10 @@ public class ProfileFragment extends Fragment {
 
                         askForGps();
                     }
-                    else
-                        Toast.makeText(getContext(),getString(R.string.gps_perrmissions),Toast.LENGTH_SHORT).show();
+                    else {
+                        Toast.makeText(getContext(), getString(R.string.gps_perrmissions), Toast.LENGTH_SHORT).show();
+                        switcher.setChecked(false);
+                    }
                 } else {
                     slider.setEnabled(false);
                     slider.setValue(1);
