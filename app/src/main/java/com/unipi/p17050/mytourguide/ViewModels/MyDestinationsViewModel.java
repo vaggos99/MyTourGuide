@@ -65,7 +65,7 @@ public class MyDestinationsViewModel extends ViewModel {
                                     dest.add(destination);
                                 }
                             } else {
-                                if (score > 0.3) {
+                                if (score > 0.4) {
                                     scores.add(score);
                                     dest.add(destination);
                                 }
@@ -75,7 +75,7 @@ public class MyDestinationsViewModel extends ViewModel {
                     }
                     catch (NullPointerException e){
                         Log.d("TAG", "destination calculate without location");
-                        if(score>0.3) {
+                        if(score>0.4) {
                             scores.add(score);
                             dest.add(destination);
                         }

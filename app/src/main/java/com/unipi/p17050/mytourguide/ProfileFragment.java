@@ -3,7 +3,9 @@ package com.unipi.p17050.mytourguide;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
@@ -75,6 +77,7 @@ public class ProfileFragment extends Fragment {
     private MaterialCheckBox has_children,has_pushchair;
     private ProfilesViewModel viewModel;
     private Chip museum_chip, archaeological_chip, stadium_chip, sports_chip, churches_chip, monastery_chip, strolling_chip, shopping_chip, theater_chip, dining_chip;
+    private  LocationManager manager ;
 
     @Override
     public void onResume() {
@@ -90,12 +93,15 @@ public class ProfileFragment extends Fragment {
         root = inflater.inflate(R.layout.fragment_profile, container, false);
         viewModel = new ViewModelProvider(requireActivity()).get(ProfilesViewModel.class);
         mFusedclient = LocationServices.getFusedLocationProviderClient(getActivity());
+        manager = (LocationManager) getActivity(). getSystemService(Context. LOCATION_SERVICE);
         if (isLocationPermissionGranded() && viewModel.isShown()==false) {
-            askForGps();
+
+            if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+                buildAlertMessageNoGps(getString(R.string.gps_suggest));
+            }
             viewModel.setShown(true);
         }
         else{
-            final LocationManager manager = (LocationManager) getActivity(). getSystemService(Context. LOCATION_SERVICE);;
 
             if ( manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
                 getLocation();
@@ -223,8 +229,11 @@ public class ProfileFragment extends Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (switcher.isChecked()) {
                     if (isLocationPermissionGranded()) {
-
-                        askForGps();
+                        if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+                            buildAlertMessageNoGps(getString(R.string.gps_needed));
+                        }
+                        else
+                            getLocation();
                     }
                     else {
                         Toast.makeText(getContext(), getString(R.string.gps_perrmissions), Toast.LENGTH_SHORT).show();
@@ -363,57 +372,7 @@ public class ProfileFragment extends Fragment {
         return false;
     }
 
-    private void askForGps() {
-        LocationRequest locationRequest = LocationRequest.create();
-        locationRequest.setInterval(10000);
-        locationRequest.setFastestInterval(5000);
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
-
-        SettingsClient settingsClient = LocationServices.getSettingsClient(getActivity());
-        Task<LocationSettingsResponse> task = settingsClient.checkLocationSettings(builder.build());
-
-        task.addOnCompleteListener(new OnCompleteListener<LocationSettingsResponse>() {
-
-
-            @Override
-            public void onComplete(Task<LocationSettingsResponse> task) {
-                try {
-                    LocationSettingsResponse response = task.getResult(ApiException.class);
-                    // All location settings are satisfied. The client can initialize location
-                    // requests here.
-                    Log.d(TAG, "askForGps:GPS already enabled");
-                    getLocation();
-                } catch (ApiException exception) {
-                    switch (exception.getStatusCode()) {
-                        case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                            // Location settings are not satisfied. But could be fixed by showing the
-                            // user a dialog.
-                            try {
-                                // Cast to a resolvable exception.
-                                ResolvableApiException resolvable = (ResolvableApiException) exception;
-                                // Show the dialog by calling startResolutionForResult(),
-                                // and check the result in onActivityResult().
-                                resolvable.startResolutionForResult(
-                                        getActivity(),
-                                        REQUEST_CHECK_SETTINGS);
-                            } catch (IntentSender.SendIntentException e) {
-                                // Ignore the error.
-                            } catch (ClassCastException e) {
-                                // Ignore, should be an impossible error.
-                            }
-                            break;
-                        case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                            // Location settings are not satisfied. However, we have no way to fix the
-                            // settings so we won't show the dialog.
-                            Toast.makeText(getContext(), "Sorry there is a problem!You cannot use this...", Toast.LENGTH_SHORT).show();
-                            break;
-                    }
-                }
-            }
-        });
-    }
 
     @SuppressLint("MissingPermission")
     private void getLocation() {
@@ -451,34 +410,21 @@ public class ProfileFragment extends Fragment {
                 });
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
 
-        //final LocationSettingsStates states = LocationSettingsStates.fromIntent(data);
-        switch (requestCode) {
-            case REQUEST_CHECK_SETTINGS:
-                switch (resultCode) {
-                    case Activity.RESULT_OK:
-                        Log.d(TAG, "askForGps:GPS  enabled");
-                        // All required changes were successfully made
-                        getLocation();
-                        Toast.makeText(getActivity(), getString(R.string.gps_enabled), Toast.LENGTH_LONG).show();
-                        break;
-
-                    case Activity.RESULT_CANCELED:
-                        // The user was asked to change settings, but chose not to
-                        Log.d(TAG, "askForGps:GPS  denied");
-                        switcher.setChecked(false);
-                        Toast.makeText(getActivity(), getString(R.string.gps_denied), Toast.LENGTH_LONG).show();
-                        break;
-                    default:
-                        switcher.setChecked(false);
-                        break;
-
-                }
-                break;
-        }
+    private void buildAlertMessageNoGps(String message) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton(getString(R.string.yes), (dialog, id) -> {
+                    startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    getLocation();
+                })
+                .setNegativeButton(R.string.no, (dialog, id) -> {
+                    switcher.setChecked(false);
+                    dialog.cancel();
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
     }
 }
 

@@ -9,35 +9,29 @@ import java.util.List;
 import java.util.Set;
 
 public class Jaccard {
-    public static double calculate(Profile profile, Destination destination)
-    {
-        ArrayList profile_interests;
-        ArrayList destination_interests;
-        ArrayList destination_age_group;
-        String profile_age_group=profile.getAge_group();
+    public static double calculate(Profile profile, Destination destination) {
+
         try {
-            profile_interests = new ArrayList(profile.getInterests());
-            destination_interests = new ArrayList(destination.getCategory());
-            destination_age_group = new ArrayList(destination.getAge_group());
-        }
-        catch (NullPointerException e){
-            profile_interests = new ArrayList();
-            destination_interests = new ArrayList();
-            destination_age_group = new ArrayList();
-        }
-
-        double union= getUnionOfLists(profile_interests,destination_interests)+destination_age_group.size();
-        double intersect=  1.5*getIntersectOfLists(profile_interests,destination_interests);
-        if(destination_age_group.contains(profile_age_group))
-            intersect++;
-        if((profile.getAge_group().equals("Elder") || profile.isPushchair()) ){
-            if(destination.isEasy_access())
+            String profile_age_group = profile.getAge_group();
+            ArrayList profile_interests = new ArrayList(profile.getInterests());
+            ArrayList destination_interests = new ArrayList(destination.getCategory());
+            ArrayList destination_age_group = new ArrayList(destination.getAge_group());
+            double union = getUnionOfLists(profile_interests, destination_interests) + destination_age_group.size();
+            double intersect = 1.5 * getIntersectOfLists(profile_interests, destination_interests);
+            if (destination_age_group.contains(profile_age_group))
                 intersect++;
-            union++;
+            if ((profile.getAge_group().equals("Elder") || profile.isPushchair())) {
+                if (destination.isEasy_access())
+                    intersect++;
+                union++;
+            }
+            return intersect / union;
+        } catch (NullPointerException e) {
+            return 0;
         }
-        return intersect/union;
-    }
 
+
+    }
 
 
     private static double getUnionOfLists(List<String> list1, List<String> list2) {
@@ -48,6 +42,7 @@ public class Jaccard {
 
         return new ArrayList<>(set).size();
     }
+
     private static double getIntersectOfLists(List<String> list1, List<String> list2) {
 
 

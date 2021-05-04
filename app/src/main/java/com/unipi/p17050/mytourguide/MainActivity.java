@@ -182,16 +182,7 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ProfileFragment.REQUEST_CHECK_SETTINGS){
-            ProfileFragment pf= (ProfileFragment) selectedFragment;
-            pf.onActivityResult(requestCode, resultCode, data);
-        }
-        else {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
-    }
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);

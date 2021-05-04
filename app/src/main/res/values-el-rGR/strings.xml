@@ -43,7 +43,10 @@
     <string name="dining">Καφές/Φαγγητό</string>
     <string name="dest_image">Εικόνα του μέρους</string>
     <string name="pushchair">Έχω καροτσάκι</string>
-
+    <string name="yes">Ναι</string>
+    <string name="no">\'Οχι</string>
+    <string name="gps_needed">Θα πρέπει να ανοίξετε το gps!</string>
+    <string name="gps_suggest">"Φαίνεται ότι το gps είναι απενεργοποιημένο, θα θέλατε να το ανοίξετε;"</string>
     <string-array name="age_class_array">
         <item>Έφηβος/Ενήλικας</item>
         <item>Μεσήλικας</item>
