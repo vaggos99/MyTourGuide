@@ -22,15 +22,13 @@
     <string name="Temple_of_Hephaestus">Ναοός του Ηφαίστου</string>
     <string name="interests">Ενδιαφέροντα</string>
     <string name="age_group">Ηλικιακή ομάδα</string>
+    <string name="transport">Μεταφορά</string>
     <string name="Culture">Πολιτισμός</string>
     <string name="Strolling">Περιήγηση</string>
     <string name="Sport">Άθλητισμός</string>
     <string name="Religion">Θρησκεία</string>
     <string name="Setup_profile">Πρέπει να συμπληρώσεις το προφιλ σου</string>
     <string name="entertainment">Διασκέδαση</string>
-    <string name="Teen_Adult">Έφηβος/Ενήλικας</string>
-    <string name="Middle_aged">Μεσήλικας</string>
-    <string name="Elder">Ηλικωμένος</string>
     <string name="max_distance">Μέγιστη απόσταση(σε χλμ)</string>
     <string name="children">Έχω μικρά παιδιά</string>
     <string name="museums">Μουσεία</string>
@@ -48,8 +46,16 @@
     <string name="gps_needed">Θα πρέπει να ανοίξετε το gps!</string>
     <string name="gps_suggest">"Φαίνεται ότι το gps είναι απενεργοποιημένο, θα θέλατε να το ανοίξετε;"</string>
     <string-array name="age_class_array">
+        <item>Απροσδιόριστο</item>
         <item>Έφηβος/Ενήλικας</item>
         <item>Μεσήλικας</item>
         <item>Ηλικωμένος</item>
+    </string-array>
+
+
+    <string-array name="transport_class_array">
+        <item>Απροσδιόριστο</item>
+        <item>Αυτοκίνητο</item>
+        <item>Μέσα μεταφοράς</item>
     </string-array>
 </resources>

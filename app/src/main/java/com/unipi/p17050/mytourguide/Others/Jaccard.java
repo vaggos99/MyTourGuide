@@ -11,24 +11,37 @@ import java.util.Set;
 public class Jaccard {
     public static double calculate(Profile profile, Destination destination) {
 
-        try {
-            String profile_age_group = profile.getAge_group();
+
             ArrayList profile_interests = new ArrayList(profile.getInterests());
             ArrayList destination_interests = new ArrayList(destination.getCategory());
             ArrayList destination_age_group = new ArrayList(destination.getAge_group());
-            double union = getUnionOfLists(profile_interests, destination_interests) + destination_age_group.size();
-            double intersect = 1.5 * getIntersectOfLists(profile_interests, destination_interests);
-            if (destination_age_group.contains(profile_age_group))
+            ArrayList transport_list=new ArrayList(destination.getTransport());
+            double union =getUnionOfLists(profile_interests, destination_interests) ;
+            double intersect =  2*getIntersectOfLists(profile_interests, destination_interests);
+
+            if (destination_age_group.contains(profile.getAge_group()) && !profile.getAge_group().equals("Undefined")) {
                 intersect++;
+                union += destination_age_group.size();
+
+            }
+            else if(!profile.getAge_group().equals("Undefined"))
+                union += 1.5*destination_age_group.size();
+
+            if (transport_list.contains(profile.getTransport()) && !profile.getTransport().equals("Undefined")) {
+                intersect++;
+                union += transport_list.size();
+            }
+            else if(!profile.getTransport().equals("Undefined"))
+                union += transport_list.size();
+
             if ((profile.getAge_group().equals("Elder") || profile.isPushchair())) {
                 if (destination.isEasy_access())
                     intersect++;
                 union++;
             }
+            System.out.println(intersect+" "+union);
             return intersect / union;
-        } catch (NullPointerException e) {
-            return 0;
-        }
+
 
 
     }
@@ -39,7 +52,7 @@ public class Jaccard {
         Set<String> set = new HashSet<>();
         set.addAll(list1);
         set.addAll(list2);
-
+        System.out.println(set);
         return new ArrayList<>(set).size();
     }
 

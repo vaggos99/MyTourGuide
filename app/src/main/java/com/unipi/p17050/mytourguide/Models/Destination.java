@@ -18,7 +18,7 @@ public class Destination {
     private String type;
     private ArrayList<String> category;
     private ArrayList<String> age_group;
-    private int accessibility;
+    private ArrayList<String> transport;
     private My_Location location;
     private String type_gr;
 
@@ -71,6 +71,9 @@ public class Destination {
     }
 
     public ArrayList<String> getAge_group() {
+        if(age_group==null){
+            age_group=new ArrayList<>();
+        }
         return age_group;
     }
 
@@ -78,6 +81,16 @@ public class Destination {
         this.age_group = age_group;
     }
 
+    public ArrayList<String> getTransport() {
+        if(transport==null){
+            transport=new ArrayList<>();
+        }
+        return transport;
+    }
+
+    public void setTransport(ArrayList<String> transport) {
+        this.transport = transport;
+    }
 
     public String getName() {
         return name;
@@ -97,6 +110,9 @@ public class Destination {
     }
 
     public ArrayList<String> getCategory() {
+        if(category==null){
+            category=new ArrayList<>();
+        }
         return category;
     }
 
@@ -104,13 +120,6 @@ public class Destination {
         this.category = category;
     }
 
-    public int getAccessibility() {
-        return accessibility;
-    }
-
-    public void setAccessibility(int accessibility) {
-        this.accessibility = accessibility;
-    }
 
     public String getImage() {
         return image;

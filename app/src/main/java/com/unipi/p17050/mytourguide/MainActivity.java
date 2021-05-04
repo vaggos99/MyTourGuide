@@ -34,6 +34,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.unipi.p17050.mytourguide.Models.Profile;
 import com.unipi.p17050.mytourguide.ViewModels.ProfilesViewModel;
@@ -60,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null)
             logout();
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("destinations");
+        mDatabase.keepSynced(true);
         getLocationPermission();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         bnv = findViewById(R.id.bottom_navigation);

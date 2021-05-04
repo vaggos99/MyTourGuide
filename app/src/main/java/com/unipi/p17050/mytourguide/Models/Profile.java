@@ -7,8 +7,8 @@ import java.util.ArrayList;
 
 public class Profile {
     private ArrayList<String> interests = new ArrayList<String>();
-    private ArrayList<Integer> accessibility = new ArrayList<>();
-    private String age_group;
+    private String transport="Undefined";
+    private String age_group="Undefined";
     private boolean pushchair;
     private boolean children;
 
@@ -29,9 +29,17 @@ public class Profile {
         this.children = children;
     }
 
+    public String getTransport() {
+
+
+        return transport;
+    }
+
+    public void setTransport(String transport) {
+        this.transport = transport;
+    }
+
     public String getAge_group() {
-        if(age_group==null)
-            age_group="";
         return age_group;
     }
 
@@ -49,13 +57,7 @@ public class Profile {
         this.interests = interests;
     }
 
-    public ArrayList<Integer> getAccessibility() {
-        return accessibility;
-    }
 
-    public void setAccessibility(ArrayList<Integer> accessibility) {
-        this.accessibility = accessibility;
-    }
 
     public void addInterest(String value) {
         if (!interests.contains(value))
@@ -66,12 +68,5 @@ public class Profile {
         interests.remove(value);
     }
 
-    public void addAccessibility(int value) {
-        if (!accessibility.contains(value))
-            accessibility.add(value);
-    }
 
-    public void removeAccessibility(Object value) {
-        accessibility.remove(value);
-    }
 }

@@ -70,7 +70,7 @@ public class ProfileFragment extends Fragment {
     private SwitchMaterial switcher;
     private FusedLocationProviderClient mFusedclient;
     private LocationCallback mLocationCallback;
-    private AutoCompleteTextView age_choices;
+    private AutoCompleteTextView age_choices,transport_choices;
     private ExpandableLayout c_expandableLayout, e_expandableLayout, s_expandableLayout, r_expandableLayout;
     private Profile profile;
     private Slider slider;
@@ -84,6 +84,8 @@ public class ProfileFragment extends Fragment {
         super.onResume();
         ArrayAdapter<String> agedGroup = new ArrayAdapter<>(getContext(), R.layout.list_item, getResources().getStringArray(R.array.age_class_array));
         age_choices.setAdapter(agedGroup);
+        ArrayAdapter<String> transportGroup = new ArrayAdapter<>(getContext(), R.layout.list_item, getResources().getStringArray(R.array.transport_class_array));
+        transport_choices.setAdapter(transportGroup);
     }
 
     @Override
@@ -112,6 +114,7 @@ public class ProfileFragment extends Fragment {
         switcher = root.findViewById(R.id.enable_distance);
         slider = root.findViewById(R.id.slider);
         age_choices = root.findViewById(R.id.age_choices);
+        transport_choices=root.findViewById(R.id.transport_choices);
         has_children = root.findViewById(R.id.has_children);
         has_pushchair=root.findViewById(R.id.has_pushchair);
 
@@ -168,16 +171,27 @@ public class ProfileFragment extends Fragment {
                 }
                 switch (profile.getAge_group()) {
                     case "Teen/Adult":
-                        age_choices.setText(getString(R.string.Teen_Adult), false);
+                        age_choices.setText(getResources().getStringArray(R.array.age_class_array)[1], false);
                         break;
                     case "Middle-aged":
-                        age_choices.setText(getString(R.string.Middle_aged), false);
+                        age_choices.setText(getResources().getStringArray(R.array.age_class_array)[2], false);
                         break;
                     case "Elder":
-                        age_choices.setText(getString(R.string.Elder), false);
+                        age_choices.setText(getResources().getStringArray(R.array.age_class_array)[3], false);
                         break;
+                    default:
+                        age_choices.setText(getResources().getStringArray(R.array.age_class_array)[0], false);
                 }
-
+                switch (profile.getTransport()) {
+                    case "Car":
+                        transport_choices.setText(getResources().getStringArray(R.array.transport_class_array)[1], false);
+                        break;
+                    case "Means of transport":
+                        transport_choices.setText(getResources().getStringArray(R.array.transport_class_array)[2], false);
+                        break;
+                    default:
+                        transport_choices.setText(getResources().getStringArray(R.array.transport_class_array)[0], false);
+                }
                 has_children.setChecked(profile.isChildren());
                 if(profile.isChildren()){
                     has_pushchair.setVisibility(View.VISIBLE);
@@ -209,20 +223,35 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
-                    case 0:
+                    case 1:
                         profile.setAge_group("Teen/Adult");
                         break;
-                    case 1:
+                    case 2:
                         profile.setAge_group("Middle-aged");
                         break;
-                    case 2:
+                    case 3:
                         profile.setAge_group("Elder");
                         break;
+                    default:
+                        profile.setAge_group("Undefined");
                 }
                 viewModel.setProfile(profile);
             }
         });
 
+        transport_choices.setOnItemClickListener((parent, view, position, id) -> {
+            switch (position) {
+                case 1:
+                    profile.setTransport("Car");
+                    break;
+                case 2:
+                    profile.setTransport("Means of transport");
+                    break;
+                default:
+                    profile.setTransport("Undefined");
+            }
+            viewModel.setProfile(profile);
+        });
 
         switcher.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

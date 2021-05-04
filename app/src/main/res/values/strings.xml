@@ -22,14 +22,12 @@
     <string name="Temple_of_Hephaestus">Temple of Hephaestus</string>
     <string name="interests">Interests</string>
     <string name="age_group">Age group</string>
+    <string name="transport">Transport</string>
     <string name="Culture">Culture</string>
     <string name="Strolling">Strolling</string>
     <string name="Sport">Sports</string>
     <string name="Religion">Religion</string>
     <string name="Setup_profile">You have to set up your profile</string>
-    <string name="Teen_Adult">Teen/Adult</string>
-    <string name="Middle_aged">Middle-aged</string>
-    <string name="Elder">Elder</string>
     <string name="max_distance">Max distance(in km)</string>
     <string name="children">I have little children</string>
     <string name="entertainment">Entertainment</string>
@@ -49,8 +47,16 @@
     <string name="gps_needed">You have to open the gps to use this!</string>
     <string name="gps_suggest">"Your GPS seems to be disabled, do you want to enable it?"</string>
     <string-array name="age_class_array">
+        <item>Undefined</item>
         <item>Teen/Adult</item>
         <item>Middle-aged</item>
         <item>Elder</item>
     </string-array>
+
+    <string-array name="transport_class_array">
+        <item>Undefined</item>
+        <item>Car</item>
+        <item>Means of transport</item>
+    </string-array>
+
 </resources>

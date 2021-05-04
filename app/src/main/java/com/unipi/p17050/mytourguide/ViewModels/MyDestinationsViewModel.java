@@ -27,8 +27,7 @@ public class MyDestinationsViewModel extends ViewModel {
 
     public void setDestinations(Profile profile, float distance, My_Location my_location) {
         Log.i(TAG, "update list");
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("destinations");
         Log.d(TAG, "Get destinations");
         if (destinations == null) {
             Log.i(TAG, " destinations NULL");
@@ -41,15 +40,16 @@ public class MyDestinationsViewModel extends ViewModel {
             return;
         }
 
-        mDatabase.child("destinations").addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Log.d("TAG", "fetching destinations");
                 ArrayList<Double> scores = new ArrayList<>();
                 ArrayList<Destination> dest = new ArrayList<>();
-                int i=0;
+
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                  System.out.println(dataSnapshot.getKey());
                     Destination destination = dataSnapshot.getValue(Destination.class);
                     float[] resultArray = new float[99];
                     double score=Jaccard.calculate(profile, destination);
@@ -59,36 +59,30 @@ public class MyDestinationsViewModel extends ViewModel {
                             Log.d("TAG", "destination calculate");
 
                             if (profile.isChildren() || profile.getAge_group().equals("Elder")) {
-                                score = score * 1000 / resultArray[0];
-                                if (score > 0.3) {
-                                    scores.add(score);
-                                    dest.add(destination);
-                                }
-                            } else {
-                                if (score > 0.4) {
-                                    scores.add(score);
-                                    dest.add(destination);
-                                }
-
+                                score = score * 2000 / resultArray[0];
+                            }
+                            if (score > 0.40) {
+                                scores.add(score);
+                                dest.add(destination);
                             }
                         }
                     }
                     catch (NullPointerException e){
                         Log.d("TAG", "destination calculate without location");
-                        if(score>0.4) {
+                        if(score>0.40) {
                             scores.add(score);
                             dest.add(destination);
                         }
 
                     }
-                    i++;
+
                 }
 
                 QuickSort quickSort = new QuickSort(dest, scores);
 
                 dest=quickSort.startQuicksort();
                 System.out.println(scores);
-                System.out.println(i);
+
                 destinations.postValue(dest);
 
             }
