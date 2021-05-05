@@ -17,7 +17,6 @@ public class Destination {
     private boolean easy_access;
     private String type;
     private ArrayList<String> category;
-    private ArrayList<String> age_group;
     private ArrayList<String> transport;
     private My_Location location;
     private String type_gr;
@@ -76,17 +75,6 @@ public class Destination {
 
     public void setName_gr(String name_gr) {
         this.name_gr = name_gr;
-    }
-
-    public ArrayList<String> getAge_group() {
-        if(age_group==null){
-            age_group=new ArrayList<>();
-        }
-        return age_group;
-    }
-
-    public void setAge_group(ArrayList<String> age_group) {
-        this.age_group = age_group;
     }
 
     public ArrayList<String> getTransport() {

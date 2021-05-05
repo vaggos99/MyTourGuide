@@ -11,6 +11,7 @@
     <string name="hybrid">Hybrid</string>
     <string name="normal">Normal</string>
     <string name="map">Map</string>
+    <string name="suggestions">Suggestions</string>
     <string name="error_map">You can\'t make map requests</string>
     <string name="search_place">Search a place</string>
     <string name="google_api" translatable="false">AIzaSyAgxuI0TDOkNf0WurR3Rsqzn6Hxz0s87lo</string>
