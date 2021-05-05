@@ -61,7 +61,7 @@ public class MyDestinationsViewModel extends ViewModel {
                             if (profile.isChildren() || profile.getAge_group().equals("Elder")) {
                                 score = score * 2000 / resultArray[0];
                             }
-                            if (score > 0.40) {
+                            if (score >= 0.50) {
                                 scores.add(score);
                                 dest.add(destination);
                             }
@@ -69,7 +69,7 @@ public class MyDestinationsViewModel extends ViewModel {
                     }
                     catch (NullPointerException e){
                         Log.d("TAG", "destination calculate without location");
-                        if(score>0.40) {
+                        if(score>=0.50) {
                             scores.add(score);
                             dest.add(destination);
                         }

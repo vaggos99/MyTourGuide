@@ -10,7 +10,7 @@ public class Destination {
     private String name;
 
     private String name_gr;
-
+    private boolean children;
     private String image;
     private String info;
     private String info_gr;
@@ -21,6 +21,14 @@ public class Destination {
     private ArrayList<String> transport;
     private My_Location location;
     private String type_gr;
+
+    public boolean isChildren() {
+        return children;
+    }
+
+    public void setChildren(boolean children) {
+        this.children = children;
+    }
 
     public String getInfo_gr() {
         return info_gr;
