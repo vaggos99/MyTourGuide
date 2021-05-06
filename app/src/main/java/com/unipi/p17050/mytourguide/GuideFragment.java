@@ -9,14 +9,11 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-
-import com.google.android.gms.maps.model.LatLng;
 import com.unipi.p17050.mytourguide.Models.Destination;
 import com.unipi.p17050.mytourguide.Models.My_Location;
 import com.unipi.p17050.mytourguide.Models.Profile;
@@ -32,22 +29,18 @@ public class GuideFragment extends Fragment {
 
     private RecyclerView destinationsRV;
 
-    private View view;
-
-    private MyDestinationsViewModel destviewModel;
-
     private ArrayList<Destination> destinations;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_guide, container, false);
+        View view = inflater.inflate(R.layout.fragment_guide, container, false);
 
         destinationsRV = view.findViewById(R.id.destinationsRV);
 
         ProfilesViewModel viewModel = new ViewModelProvider(requireActivity()).get(ProfilesViewModel.class);
-        destviewModel = new ViewModelProvider(requireActivity()).get(MyDestinationsViewModel.class);
+        MyDestinationsViewModel destviewModel = new ViewModelProvider(requireActivity()).get(MyDestinationsViewModel.class);
         float distance =viewModel.getDistance().getValue();
         My_Location my_location=viewModel.getLocation().getValue();
 

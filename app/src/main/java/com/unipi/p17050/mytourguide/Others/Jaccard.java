@@ -16,14 +16,14 @@ public class Jaccard {
         ArrayList destination_interests = new ArrayList(destination.getCategory());
         ArrayList transport_list = new ArrayList(destination.getTransport());
         double union = getUnionOfLists(profile_interests, destination_interests);
-        double intersect = (1 + (double) profile_interests.size() / (double) destination_interests.size()) * getIntersectOfLists(profile_interests, destination_interests);
+        double  intersect =  getIntersectOfLists(profile_interests, destination_interests) *(1+(float)profile_interests.size()/2.0);
 
 
         if (transport_list.contains(profile.getTransport()) && !profile.getTransport().equals("Undefined")) {
             intersect++;
-            union += transport_list.size();
+            union ++;
         } else if (!profile.getTransport().equals("Undefined"))
-            union += 1.5 * transport_list.size();
+            union +=transport_list.size();
 
         if ((profile.getAge_group().equals("Elder") || profile.isPushchair())) {
             if (destination.isEasy_access())
@@ -34,9 +34,6 @@ public class Jaccard {
         if (profile.isChildren()) {
             if (destination.isChildren())
                 intersect++;
-            else
-                union++;
-
             union++;
         }
         System.out.println(intersect + " " + union);

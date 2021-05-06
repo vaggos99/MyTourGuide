@@ -96,16 +96,12 @@ public class ProfileFragment extends Fragment {
         viewModel = new ViewModelProvider(requireActivity()).get(ProfilesViewModel.class);
         mFusedclient = LocationServices.getFusedLocationProviderClient(getActivity());
         manager = (LocationManager) getActivity(). getSystemService(Context. LOCATION_SERVICE);
-        if (isLocationPermissionGranded() && viewModel.isShown()==false) {
-
-            if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+        if(isLocationPermissionGranded()){
+            if(viewModel.isShown()==false && !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ){
                 buildAlertMessageNoGps(getString(R.string.gps_suggest));
+                viewModel.setShown(true);
             }
-            viewModel.setShown(true);
-        }
-        else{
-
-            if ( manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+            else if(manager.isProviderEnabled( LocationManager.GPS_PROVIDER )){
                 getLocation();
             }
         }

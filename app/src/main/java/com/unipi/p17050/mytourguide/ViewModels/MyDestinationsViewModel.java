@@ -7,6 +7,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -16,8 +17,10 @@ import com.unipi.p17050.mytourguide.Models.Destination;
 import com.unipi.p17050.mytourguide.Models.My_Location;
 import com.unipi.p17050.mytourguide.Models.Profile;
 import com.unipi.p17050.mytourguide.Others.Jaccard;
-import com.unipi.p17050.mytourguide.Others.QuickSort;
+import com.unipi.p17050.mytourguide.Others.SortDestinations;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MyDestinationsViewModel extends ViewModel {
@@ -49,41 +52,48 @@ public class MyDestinationsViewModel extends ViewModel {
                 ArrayList<Destination> dest = new ArrayList<>();
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                  System.out.println(dataSnapshot.getKey());
                     Destination destination = dataSnapshot.getValue(Destination.class);
-                    float[] resultArray = new float[99];
-                    double score=Jaccard.calculate(profile, destination);
-                    try {
-                        Location.distanceBetween(my_location.getLatitude(), my_location.getLongitude(), destination.getLocation().getLatitude(), destination.getLocation().getLongitude(), resultArray);
-                        if (resultArray[0] / 1000 < distance || distance < 1) {
-                            Log.d("TAG", "destination calculate");
-
-                            if (profile.isChildren() || profile.getAge_group().equals("Elder")) {
-                                score = score * 2000 / resultArray[0];
-                            }
-                            if (score >= 0.75) {
-                                scores.add(score);
-                                dest.add(destination);
-                            }
-                        }
+                    System.out.println(dataSnapshot.getKey());
+                    double score = Jaccard.calculate(profile, destination);
+                    if (score >= 0.50) {
+                        scores.add(score);
+                        dest.add(destination);
                     }
-                    catch (NullPointerException e){
-                        Log.d("TAG", "destination calculate without location");
-                        if(score>=0.75) {
-                            scores.add(score);
-                            dest.add(destination);
-                        }
 
-                    }
 
                 }
 
-                QuickSort quickSort = new QuickSort(dest, scores);
+                if (dest.size() > 0) {
+                    if (my_location == null) {
+                        int max = scores.indexOf(Collections.max(scores));
+                        Collections.swap(dest, 0, max);
+                        SortDestinations.sortBydDistance(dest, dest.get(0).getLocation(), 0);
+                    } else {
+                        SortDestinations.sortBydDistance(dest, my_location, -1);
+                    }
+                    if ((profile.isChildren() || profile.getAge_group().equals("Elder"))) {
 
-                dest=quickSort.startQuicksort();
+                        ArrayList<Destination> dest_temp = new ArrayList<>();
+
+                        dest_temp.add(dest.get(0));
+
+                        for (int i = 1; i < scores.size(); i++) {
+                            float[] resultArray = new float[99];
+                            Location.distanceBetween(dest.get(i).getLocation().getLatitude(), dest.get(i).getLocation().getLongitude(), dest.get(0).getLocation().getLatitude(), dest.get(0).getLocation().getLongitude(), resultArray);
+
+                            scores.set(i, scores.get(i) * 2000 / resultArray[0]);
+                            if (scores.get(i) >= 0.70) {
+                                dest_temp.add(dest.get(i));
+                            }
+                        }
+
+                        SortDestinations.sortBydDistance(dest, dest.get(0).getLocation(), 0);
+                        destinations.postValue(dest_temp);
+                    } else
+                        destinations.postValue(dest);
+                } else
+                    destinations.postValue(dest);
                 System.out.println(scores);
-
-                destinations.postValue(dest);
 
             }
 
