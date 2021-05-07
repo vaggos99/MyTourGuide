@@ -61,15 +61,17 @@ public class MyDestinationsViewModel extends ViewModel {
                             continue;
                     }
                     double score = Jaccard.calculate(profile, destination);
-                    if (score >= 1.0 - (float) profile.getInterests().size() / 8.0) {
+                    if (score >= 1.0 - (float) profile.getInterests().size() / 8.0||score>=0.8) {
                         scores.add(score);
                         dest.add(destination);
+
                     }
 
 
                 }
 
                 if (dest.size() > 0) {
+
                     if (my_location == null) {
                         int max = scores.indexOf(Collections.max(scores));
                         Collections.swap(dest, 0, max);
@@ -87,8 +89,8 @@ public class MyDestinationsViewModel extends ViewModel {
                             float[] resultArray = new float[99];
                             Location.distanceBetween(dest.get(i).getLocation().getLatitude(), dest.get(i).getLocation().getLongitude(), dest.get(0).getLocation().getLatitude(), dest.get(0).getLocation().getLongitude(), resultArray);
 
-                            scores.set(i, scores.get(i) * 2000 / resultArray[0]);
-                            if (scores.get(i) >= (1.0 - (float) profile.getInterests().size() / 8.0)) {
+                            scores.set(i, scores.get(i) * 3000 / resultArray[0]);
+                            if (scores.get(i) >= (1.0 - (float) profile.getInterests().size() / 8.0)||scores.get(i)>=0.8) {
                                 dest_temp.add(dest.get(i));
                             }
                         }
