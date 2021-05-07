@@ -54,8 +54,14 @@ public class MyDestinationsViewModel extends ViewModel {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Destination destination = dataSnapshot.getValue(Destination.class);
                     System.out.println(dataSnapshot.getKey());
+                    if (distance >= 1 && my_location != null) {
+                        float[] resultArray = new float[99];
+                        Location.distanceBetween(my_location.getLatitude(), my_location.getLongitude(), destination.getLocation().getLatitude(), destination.getLocation().getLongitude(), resultArray);
+                        if (resultArray[0] / 1000 > distance)
+                            continue;
+                    }
                     double score = Jaccard.calculate(profile, destination);
-                    if (score >= 0.50) {
+                    if (score >= 1.0 - (float) profile.getInterests().size() / 8.0) {
                         scores.add(score);
                         dest.add(destination);
                     }
@@ -82,15 +88,23 @@ public class MyDestinationsViewModel extends ViewModel {
                             Location.distanceBetween(dest.get(i).getLocation().getLatitude(), dest.get(i).getLocation().getLongitude(), dest.get(0).getLocation().getLatitude(), dest.get(0).getLocation().getLongitude(), resultArray);
 
                             scores.set(i, scores.get(i) * 2000 / resultArray[0]);
-                            if (scores.get(i) >= 0.70) {
+                            if (scores.get(i) >= (1.0 - (float) profile.getInterests().size() / 8.0)) {
                                 dest_temp.add(dest.get(i));
                             }
                         }
 
-                        SortDestinations.sortBydDistance(dest, dest.get(0).getLocation(), 0);
-                        destinations.postValue(dest_temp);
-                    } else
-                        destinations.postValue(dest);
+                        if (dest_temp.size() >= 5) {
+                            dest_temp.subList(5, dest_temp.size()).clear();
+                            destinations.postValue(dest_temp);
+                        } else
+                            destinations.postValue(dest_temp);
+                    } else {
+                        if (dest.size() >= 7) {
+                            dest.subList(7, dest.size()).clear();
+                            destinations.postValue(dest);
+                        } else
+                            destinations.postValue(dest);
+                    }
                 } else
                     destinations.postValue(dest);
                 System.out.println(scores);

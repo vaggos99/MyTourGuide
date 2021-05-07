@@ -2,19 +2,19 @@ package com.unipi.p17050.mytourguide;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
+
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
+
 import android.content.Intent;
-import android.content.IntentSender;
+
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -33,22 +33,16 @@ import android.widget.CompoundButton;
 import android.widget.Toast;
 
 
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.ResolvableApiException;
+
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.LocationSettingsResponse;
-import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.android.gms.location.SettingsClient;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
+
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.slider.Slider;
@@ -64,7 +58,6 @@ import net.cachapa.expandablelayout.ExpandableLayout;
 
 public class ProfileFragment extends Fragment {
     private final String TAG = this.getClass().getSimpleName();
-    static final int REQUEST_CHECK_SETTINGS = 199;
     private View root;
     private Button culture_b, sport_b, religion_b, strolling_b;
     private SwitchMaterial switcher;
@@ -86,6 +79,7 @@ public class ProfileFragment extends Fragment {
         age_choices.setAdapter(agedGroup);
         ArrayAdapter<String> transportGroup = new ArrayAdapter<>(getContext(), R.layout.list_item, getResources().getStringArray(R.array.transport_class_array));
         transport_choices.setAdapter(transportGroup);
+
     }
 
     @Override
@@ -97,11 +91,11 @@ public class ProfileFragment extends Fragment {
         mFusedclient = LocationServices.getFusedLocationProviderClient(getActivity());
         manager = (LocationManager) getActivity(). getSystemService(Context. LOCATION_SERVICE);
         if(isLocationPermissionGranded()){
-            if(viewModel.isShown()==false && !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ){
+            if(!viewModel.isShown() && !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) &&viewModel.getLocation().getValue()==null){
                 buildAlertMessageNoGps(getString(R.string.gps_suggest));
                 viewModel.setShown(true);
             }
-            else if(manager.isProviderEnabled( LocationManager.GPS_PROVIDER )){
+            else if(manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) && viewModel.getLocation().getValue()==null){
                 getLocation();
             }
         }
@@ -213,6 +207,7 @@ public class ProfileFragment extends Fragment {
             if(my_location!=null){
                 if(viewModel.getDistance().getValue()<1 && switcher.isChecked())
                     viewModel.setDistance(1);
+
             }
         });
         age_choices.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -254,7 +249,7 @@ public class ProfileFragment extends Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (switcher.isChecked()) {
                     if (isLocationPermissionGranded()) {
-                        if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+                        if (viewModel.getLocation().getValue()==null && !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
                             buildAlertMessageNoGps(getString(R.string.gps_needed));
                         }
                         else
@@ -413,6 +408,7 @@ public class ProfileFragment extends Fragment {
                             viewModel.setLocation(loc);
                         } else {
                             final LocationRequest locationRequest = LocationRequest.create();
+                            locationRequest.setExpirationDuration(30000);
                             locationRequest.setInterval(10000);
                             locationRequest.setFastestInterval(5000);
                             locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -426,14 +422,17 @@ public class ProfileFragment extends Fragment {
                                     Location mLastKnownLocation = locationResult.getLastLocation();
                                     My_Location loc =new My_Location(mLastKnownLocation.getLatitude(),mLastKnownLocation.getLongitude());
                                     viewModel.setLocation(loc);
+                                    Log.d(TAG,"Location found remove updates");
                                     mFusedclient.removeLocationUpdates(mLocationCallback);
                                 }
                             };
+                            Log.d(TAG,"Location requesting updates ");
                             mFusedclient.requestLocationUpdates(locationRequest, mLocationCallback, null);
                         }
                     }
                 });
     }
+
 
 
     private void buildAlertMessageNoGps(String message) {

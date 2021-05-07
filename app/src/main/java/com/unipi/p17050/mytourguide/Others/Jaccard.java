@@ -16,7 +16,7 @@ public class Jaccard {
         ArrayList destination_interests = new ArrayList(destination.getCategory());
         ArrayList transport_list = new ArrayList(destination.getTransport());
         double union = getUnionOfLists(profile_interests, destination_interests);
-        double  intersect =  getIntersectOfLists(profile_interests, destination_interests) *(1+(float)profile_interests.size()/2.0);
+        double  intersect =  1.5*getIntersectOfLists(profile_interests, destination_interests) ;
 
 
         if (transport_list.contains(profile.getTransport()) && !profile.getTransport().equals("Undefined")) {
