@@ -45,6 +45,8 @@
     <string name="no">\'Οχι</string>
     <string name="gps_needed">Θα πρέπει να ανοίξετε το gps!</string>
     <string name="gps_suggest">"Φαίνεται ότι το gps είναι απενεργοποιημένο, θα θέλατε να το ανοίξετε;"</string>
+    <string name="more_info">Πληροφορίες...</string>
+    <string name="how_to_get_there">Πως να πάω</string>
     <string-array name="age_class_array">
         <item>Απροσδιόριστο</item>
         <item>Έφηβος/Ενήλικας</item>

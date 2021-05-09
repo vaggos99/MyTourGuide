@@ -1,7 +1,9 @@
 package com.unipi.p17050.mytourguide;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.transition.AutoTransition;
 import android.transition.TransitionManager;
 import android.view.LayoutInflater;
@@ -67,7 +69,19 @@ public class DestinationsRecyclerViewAdapter extends RecyclerView.Adapter<Destin
                 }
             }
         });
-
+        if(destinations.get(position).getSite()!=null){
+            holder.infoButton.setVisibility(View.VISIBLE);
+            holder.infoButton.setOnClickListener(v -> {
+                Uri uri = Uri.parse(destinations.get(position).getSite()); // missing 'http://' will cause crashed
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                context.startActivity(intent);
+            });
+        }
+        holder.directionButton.setOnClickListener(v -> {
+            Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                    Uri.parse("http://maps.google.com/maps?daddr="+String.valueOf(destinations.get(position).getLocation().getLatitude())+"," +String.valueOf(destinations.get(position).getLocation().getLongitude())));
+            context.startActivity(intent);
+        });
     }
 
     @Override
@@ -88,6 +102,7 @@ public class DestinationsRecyclerViewAdapter extends RecyclerView.Adapter<Destin
         private final ImageButton drop_button;
         private final ConstraintLayout expandable_view;
         private final MaterialButton infoButton;
+        private final MaterialButton directionButton;
         private final MaterialCardView cardView;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -99,6 +114,7 @@ public class DestinationsRecyclerViewAdapter extends RecyclerView.Adapter<Destin
             expandable_view=itemView.findViewById(R.id.expandable_view);
             infoButton=itemView.findViewById(R.id.infoButton);
             cardView=itemView.findViewById(R.id.card);
+            directionButton=itemView.findViewById(R.id.directionButton);
         }
     }
 }

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class Destination {
     private String name;
-
+    private String site;
     private String name_gr;
     private boolean children;
     private String image;
@@ -20,6 +20,14 @@ public class Destination {
     private ArrayList<String> transport;
     private My_Location location;
     private String type_gr;
+
+    public String getSite() {
+        return site;
+    }
+
+    public void setSite(String site) {
+        this.site = site;
+    }
 
     public boolean isChildren() {
         return children;
