@@ -157,9 +157,10 @@ public class MainActivity extends AppCompatActivity {
                 selectedFragment = new GuideFragment();
                 break;
             case R.id.map:
-                if(isServicesOk())
-                    TAG_MY_FRAGMENT="map";
+                if(isServicesOk()) {
+                    TAG_MY_FRAGMENT = "map";
                     selectedFragment = new MapFragment();
+                }
                 break;
         }
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment,TAG_MY_FRAGMENT).commit();

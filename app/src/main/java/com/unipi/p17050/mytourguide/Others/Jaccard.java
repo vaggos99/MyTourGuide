@@ -24,6 +24,10 @@ public class Jaccard {
             union ++;
         } else if (!profile.getTransport().equals("Undefined"))
             union +=transport_list.size();
+        else{
+            union+=transport_list.size();
+            intersect+=transport_list.size();
+        }
 
         if ((profile.getAge_group().equals("Elder") || profile.isPushchair())) {
             if (destination.isEasy_access())

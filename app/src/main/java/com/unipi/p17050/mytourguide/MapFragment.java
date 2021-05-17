@@ -35,6 +35,8 @@ import androidx.core.view.GravityCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -53,7 +55,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -76,12 +80,18 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.mancj.materialsearchbar.MaterialSearchBar;
+import com.unipi.p17050.mytourguide.Models.Destination;
+import com.unipi.p17050.mytourguide.Models.My_Location;
+import com.unipi.p17050.mytourguide.Models.Profile;
+import com.unipi.p17050.mytourguide.ViewModels.MyDestinationsViewModel;
+import com.unipi.p17050.mytourguide.ViewModels.ProfilesViewModel;
 
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import static android.app.Activity.RESULT_OK;
@@ -95,12 +105,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Navigat
 
     private static final String TAG = MapFragment.class.getName();
     private static final float DEFAULT_ZOOM = 15f;
-    private boolean mLocationPermissionGranted = false;
+
 
     private SupportMapFragment supportMapFragment;
     private GoogleMap mMap;
 
-
+    private  MyDestinationsViewModel destViewModel;
     private FusedLocationProviderClient mFusedclient;
     private NavigationView navigationView;
     private Location mLastKnownLocation;
@@ -108,14 +118,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Navigat
     private MaterialSearchBar materialSearchBar;
     private View mapView;
     private DrawerLayout navDrawer;
-
+    private ArrayList<Marker> blue_markers=new ArrayList<Marker>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_map, container, false);
-        getLocationPermission();
+        destViewModel = new ViewModelProvider(requireActivity()).get(MyDestinationsViewModel.class);
+        ProfilesViewModel viewModel = new ViewModelProvider(requireActivity()).get(ProfilesViewModel.class);
+        My_Location my_location=viewModel.getLocation().getValue();
+        float distance =viewModel.getDistance().getValue();
+        Profile profile =viewModel.getProfile().getValue();
+        destViewModel.setDestinations(profile,distance,my_location);
+
         initMap();
         mapView = supportMapFragment.getView();
         mFusedclient = LocationServices.getFusedLocationProviderClient(getActivity());
@@ -123,6 +139,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Navigat
         navDrawer = view.findViewById(R.id.drawer);
         navigationView = view.findViewById(R.id.navigation);
         navigationView.setNavigationItemSelectedListener(this);
+
+
         search();
 
         return view;
@@ -134,7 +152,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Navigat
     public void onMapReady(GoogleMap googleMap) {
         Log.d(TAG, "Map is ready");
         mMap = googleMap;
-        if (mLocationPermissionGranted) {
+        if (isLocationPermissionGranded()) {
             mMap.setMyLocationEnabled(true);
         } else {
             snackbar(getString(R.string.gps_perrmissions));
@@ -147,7 +165,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Navigat
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
             layoutParams.setMargins(0, 0, 40, 180);
         }
-        if(mLocationPermissionGranted) {
+        if(isLocationPermissionGranded()) {
             //check if gps is enabled and request user to enable it
             LocationRequest locationRequest = LocationRequest.create();
             locationRequest.setInterval(10000);
@@ -179,6 +197,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Navigat
                 }
             });
         }
+        getLocations();
     }
 
     @Override
@@ -192,11 +211,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Navigat
     }
 
 
-    private void getLocationPermission() {
+    private boolean isLocationPermissionGranded() {
         Log.d(TAG, "getLocationPermission:getting permissions");
-        if (ActivityCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-            mLocationPermissionGranted = true;
-
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+            return true;
+        return false;
     }
 
 
@@ -245,6 +264,30 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Navigat
                 });
     }
 
+    private void getLocations(){
+        destViewModel.getDestinations().observe(getViewLifecycleOwner(), new Observer<List<Destination>>() {
+            @Override
+            public void onChanged(List<Destination> dest) {
+                for(Marker m :blue_markers){
+                    m.remove();
+                }
+                blue_markers.clear();
+                if(dest!=null&&dest.size()>0){
+                    for(Destination destination:dest){
+                        
+                        String title;
+                        if(Locale.getDefault().getDisplayLanguage().contains("English"))
+                            title=destination.getName();
+                        else
+                            title=destination.getName_gr();
+                        LatLng latLng = new LatLng(destination.getLocation().getLatitude(), destination.getLocation().getLongitude());
+                        blue_markers.add(mMap.addMarker(new MarkerOptions().position(latLng).title(title) .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN))));
+                    }
+                }
+
+            }
+        });
+    }
     private void snackbar(String message) {
         Snackbar.make(view.findViewById(R.id.drawer), message, Snackbar.LENGTH_SHORT).show();
     }
@@ -266,7 +309,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Navigat
                         addressList = geocoder.getFromLocationName(location, 1);
                         Address address = addressList.get(0);
                         LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-                        System.out.println(address.getLatitude() + " " + address.getLongitude());
                         mMap.addMarker(new MarkerOptions().position(latLng).title(location));
                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
                     } catch (IOException e) {

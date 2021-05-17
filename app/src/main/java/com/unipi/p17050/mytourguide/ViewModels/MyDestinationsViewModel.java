@@ -90,7 +90,7 @@ public class MyDestinationsViewModel extends ViewModel {
                             Location.distanceBetween(dest.get(i).getLocation().getLatitude(), dest.get(i).getLocation().getLongitude(), dest.get(0).getLocation().getLatitude(), dest.get(0).getLocation().getLongitude(), resultArray);
 
                             scores.set(i, scores.get(i) * 3000 / resultArray[0]);
-                            if (scores.get(i) >= (1.0 - (float) profile.getInterests().size() / 8.0)||scores.get(i)>=0.8) {
+                            if (scores.get(i) >= (1.0 - (float) profile.getInterests().size() / 5.0)||scores.get(i)>=0.8) {
                                 dest_temp.add(dest.get(i));
                             }
                         }
