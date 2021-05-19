@@ -42,7 +42,7 @@ public class ProfilesViewModel extends ViewModel {
 
     public MutableLiveData<Float> getDistance() {
         if(distance.getValue()==null)
-            distance.postValue((float) -1);
+            distance.setValue((float) -1);
         return distance;
     }
 

@@ -47,6 +47,10 @@
     <string name="gps_suggest">"Φαίνεται ότι το gps είναι απενεργοποιημένο, θα θέλατε να το ανοίξετε;"</string>
     <string name="more_info">Πληροφορίες...</string>
     <string name="how_to_get_there">Πως να πάω</string>
+    <string name="about_athens">Γενικές πληροφορίες</string>
+    <string name="favorites">Αγαπημένα</string>
+    <string name="places">Μέρη</string>
+    <string name="home">Αρχική</string>
     <string-array name="age_class_array">
         <item>Απροσδιόριστο</item>
         <item>Έφηβος/Ενήλικας</item>

@@ -103,7 +103,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Navigat
     private View view;
 
 
-    private static final String TAG = MapFragment.class.getName();
+    private  final String TAG = this.getClass().getSimpleName();
     private static final float DEFAULT_ZOOM = 15f;
 
 

@@ -71,12 +71,12 @@ public class MainActivity extends AppCompatActivity {
         if(user!=null)
             viewModel.getProfile();
         if (savedInstanceState == null) {
-            selectedFragment=new ProfileFragment();
-            TAG_MY_FRAGMENT="profile";
+            selectedFragment=new HomeFragment();
+            TAG_MY_FRAGMENT="home";
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment,TAG_MY_FRAGMENT).commit();
         }
         else{
-            TAG_MY_FRAGMENT=savedInstanceState.getString("TAG_MY_FRAGMENT","profile");
+            TAG_MY_FRAGMENT=savedInstanceState.getString("TAG_MY_FRAGMENT","home");
             selectedFragment =  getSupportFragmentManager().findFragmentByTag(TAG_MY_FRAGMENT);
         }
 
@@ -148,6 +148,10 @@ public class MainActivity extends AppCompatActivity {
     private void setFragment(int id) {
 
         switch (id) {
+            case R.id.home:
+                TAG_MY_FRAGMENT="home";
+                selectedFragment = new HomeFragment();
+                break;
             case R.id.profile:
                 TAG_MY_FRAGMENT="profile";
                 selectedFragment = new ProfileFragment();

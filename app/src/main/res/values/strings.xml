@@ -18,7 +18,7 @@
     <string name="gps_perrmissions">Enable gps usage to find your location</string>
     <string name="gps_enabled">You have enabled the gps!</string>
     <string name="gps_denied">You have denied the use of gps!</string>
-<string name="more_info">Infos...</string>
+    <string name="more_info">Infos...</string>
     <string name="how_to_get_there">How to get there</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="Temple_of_Hephaestus">Temple of Hephaestus</string>
@@ -41,13 +41,17 @@
     <string name="churches">Churches</string>
     <string name="monasteries">Monasteries</string>
     <string name="dining">Coffee/Dining</string>
-    <string translatable="false" name="shopping">Shopping</string>
+    <string name="shopping" translatable="false">Shopping</string>
     <string name="dest_image">Image of place</string>
     <string name="pushchair">I have pushchair</string>
     <string name="yes">Yes</string>
     <string name="no">\No</string>
     <string name="gps_needed">You have to open the gps to use this!</string>
     <string name="gps_suggest">"Your GPS seems to be disabled, do you want to enable it?"</string>
+    <string name="about_athens">General info</string>
+    <string name="favorites">Favorites</string>
+    <string name="places">Places</string>
+    <string name="home">Home</string>
     <string-array name="age_class_array">
         <item>Undefined</item>
         <item>Teen/Adult</item>

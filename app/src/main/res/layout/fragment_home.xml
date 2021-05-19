@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".HomeFragment">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/parthenon"
+        android:layout_weight="0.2"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.8">
+
+        <Button
+            android:id="@+id/athensInfoButton"
+            style="@style/HomeButton"
+            android:layout_width="0dp"
+
+            android:layout_height="match_parent"
+            android:drawableTop="@drawable/ic_baseline_info_24"
+            android:text="@string/about_athens"
+            android:theme="@style/Widget.AppCompat.Button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/dest_Button"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/dest_Button"
+            style="@style/HomeButton"
+            android:layout_width="0dp"
+
+            android:layout_height="match_parent"
+            android:drawableTop="@drawable/ic_places"
+            android:text="@string/places"
+            android:theme="@style/Widget.AppCompat.Button"
+            app:layout_constraintEnd_toStartOf="@+id/myFavorites"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/athensInfoButton"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/myFavorites"
+            style="@style/HomeButton"
+            android:layout_width="0dp"
+
+            android:layout_height="match_parent"
+            android:drawableTop="@drawable/ic_baseline_favorite_24"
+            android:text="@string/favorites"
+            android:theme="@style/Widget.AppCompat.Button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/dest_Button"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>
