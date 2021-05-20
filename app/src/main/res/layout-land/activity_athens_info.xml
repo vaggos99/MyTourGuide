@@ -4,19 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     tools:context=".AthensInfoActivity">
     <ImageView
         android:id="@+id/dest_image"
-        android:layout_width="match_parent"
-        android:layout_height="194dp"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
         android:contentDescription="@string/dest_image"
         android:scaleType="centerCrop"
         app:srcCompat="@drawable/athens" />
     <TextView
         android:layout_margin="10dp"
         android:id="@+id/athens_infoTextView"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="match_parent"
         android:scrollbars="vertical"/>
 

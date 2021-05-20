@@ -52,6 +52,22 @@
     <string name="favorites">Favorites</string>
     <string name="places">Places</string>
     <string name="home">Home</string>
+
+    <string name="info_about_athens_header">About Athens</string>
+    <string name="athens_info1">One of the most ancient cities of the world, Athens Greece is famous as the birthplace of democracy.
+        With a history of over 3,000 years, Athens is the best town for sightseeing. According to the myth, the city took its name after Athena,
+        the Goddess of Wisdom and daughter of Zeus. She was the protector of the city and in fact, the temple of Parthenon on the Acropolis is dedicated to her.
+</string>
+
+<string name="athens_info2">The first traces of Athens date from the Mycenaean period,
+    while it reached its peak after at the 5th century BC, known as the Golden Century of Pericles,
+    the Athenian statesman who has inspired so many innovations for his homeland and led it to its glory.
+    From as early as the 8th century BC, Athens was gradually developing into an important city-state for Greece,
+    giving emphasis on culture and its naval power. But it was in the 5th century BC when great political formations were made,
+    new buildings were constructed, including the Acropolis, the Temple of Poseidon at Sounion and the Ancient Agora, and victorious
+    imperials wars took place so that Athens would obtain new economical sources.</string>
+    <string name="athens_info">Athens is the capital of Greece since 1834 and the largest and most populous city in the country.
+        It is located in Attica, in eastern central Greece, and is one of the oldest cities in the world, with its recorded history reaching up to 3,200 BC.Allah.</string>
     <string-array name="age_class_array">
         <item>Undefined</item>
         <item>Teen/Adult</item>
