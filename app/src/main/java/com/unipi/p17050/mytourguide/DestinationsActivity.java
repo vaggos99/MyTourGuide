@@ -26,6 +26,7 @@ public class DestinationsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_destinations);
+        getSupportActionBar().setTitle(getString(R.string.places));
         TabLayout tabLayout=findViewById(R.id.tabLayout);
         RecyclerView destinationsRV = findViewById(R.id.recyclerView);
         adapter = new DestinationsRecyclerViewAdapter(this);

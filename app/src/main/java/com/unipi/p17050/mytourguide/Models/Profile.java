@@ -1,17 +1,24 @@
 package com.unipi.p17050.mytourguide.Models;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+
 
 import java.util.ArrayList;
 
 public class Profile {
-    private ArrayList<String> interests = new ArrayList<String>();
+    private ArrayList<String> interests = new ArrayList<>();
+    private ArrayList<String> favorites=new ArrayList<>();
     private String transport="Undefined";
     private String age_group="Undefined";
     private boolean pushchair;
     private boolean children;
 
+    public ArrayList<String> getFavorites() {
+        return favorites;
+    }
+
+    public void setFavorites(ArrayList<String> favorites) {
+        this.favorites = favorites;
+    }
 
     public boolean isPushchair() {
         return pushchair;

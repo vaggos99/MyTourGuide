@@ -56,7 +56,7 @@ public class ProfilesViewModel extends ViewModel {
             profile = new MutableLiveData<>();
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("Profiles");
-            mDatabase.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            mDatabase.child(user.getUid()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.exists())

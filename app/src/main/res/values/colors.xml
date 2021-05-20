@@ -17,5 +17,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="blue">#2196F3</color>
     <color name="holo_green">#68BD12</color>
-
+    <color name="red">#EF060F</color>
+    <color name="gray">#FFAAAAAA</color>
 </resources>

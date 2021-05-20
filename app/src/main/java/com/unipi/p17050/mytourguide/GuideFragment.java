@@ -29,7 +29,7 @@ import java.util.List;
 public class GuideFragment extends Fragment {
     private final String TAG = this.getClass().getSimpleName();
     private RecyclerView destinationsRV;
-
+    private Profile profile;
     private ArrayList<Destination> destinations;
 
     @Override
@@ -45,7 +45,7 @@ public class GuideFragment extends Fragment {
         float distance =viewModel.getDistance().getValue();
         My_Location my_location=viewModel.getLocation().getValue();
 
-        Profile profile =viewModel.getProfile().getValue();
+        profile =viewModel.getProfile().getValue();
         destviewModel.setDestinations(profile,distance,my_location);
 
 
@@ -60,7 +60,7 @@ public class GuideFragment extends Fragment {
                 if(destinations==null)
                     Toast.makeText(getContext(),"You have to fill your profile",Toast.LENGTH_SHORT).show();
                 else
-                    setUpAdapter(destinations);
+                    setUpAdapter();
             }
         });
 
@@ -70,9 +70,10 @@ public class GuideFragment extends Fragment {
     }
 
 
-    private void setUpAdapter(ArrayList<Destination> dest) {
+    private void setUpAdapter() {
         DestinationsRecyclerViewAdapter adapter = new DestinationsRecyclerViewAdapter(getActivity());
-        adapter.setDestinations(dest);
+        adapter.setDestinations(destinations);
+        adapter.setProfile(profile);
         destinationsRV.setAdapter(adapter);
         destinationsRV.setLayoutManager(new LinearLayoutManager(getContext()));
     }

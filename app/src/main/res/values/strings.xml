@@ -52,7 +52,7 @@
     <string name="favorites">Favorites</string>
     <string name="places">Places</string>
     <string name="home">Home</string>
-
+    <string name="no_favorites">You do not have any favorite place!</string>
     <string name="info_about_athens_header">About Athens</string>
     <string name="athens_info1">One of the most ancient cities of the world, Athens Greece is famous as the birthplace of democracy.
         With a history of over 3,000 years, Athens is the best town for sightseeing. According to the myth, the city took its name after Athena,

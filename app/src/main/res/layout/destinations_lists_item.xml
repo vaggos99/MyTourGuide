@@ -1,4 +1,4 @@
-<com.google.android.material.card.MaterialCardView
+<com.google.android.material.card.MaterialCardView xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -68,38 +68,55 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:visibility="gone"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
 
             <TextView
                 android:id="@+id/infoTxt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
+                android:text="@string/about_athens"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
-
-            <com.google.android.material.button.MaterialButton
-                style="?attr/borderlessButtonStyle"
-                android:id="@+id/directionButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:text="@string/how_to_get_there"
-                app:layout_constraintStart_toEndOf="@+id/infoButton"
-                app:layout_constraintTop_toBottomOf="@+id/infoTxt" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/infoButton"
                 style="?attr/borderlessButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+
                 android:layout_marginTop="16dp"
-                android:visibility="gone"
                 android:text="@string/more_info"
+                app:layout_constraintEnd_toStartOf="@+id/directionButton"
+                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/infoTxt" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/directionButton"
+                style="?attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/how_to_get_there"
+                app:layout_constraintEnd_toStartOf="@+id/favoriteButton"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/infoButton"
+                app:layout_constraintTop_toBottomOf="@+id/infoTxt" />
+
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/favoriteButton"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+
+                android:backgroundTint="@color/cardview_light_background"
+                android:src="@drawable/ic_baseline_favorite_border_24"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/directionButton"
                 app:layout_constraintTop_toBottomOf="@+id/infoTxt" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 

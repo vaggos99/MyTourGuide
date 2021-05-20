@@ -13,6 +13,7 @@ public class AthensInfoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_athens_info);
+        getSupportActionBar().setTitle(getString(R.string.about_athens));
         String htmlText = "<h2>"+getString(R.string.info_about_athens_header)+"</h2><br>\n" + "<p>"+getString(R.string.athens_info) +"</p><br>" + "<p>"+getString(R.string.athens_info1) +"</p><br>"
                 +"<p>"+getString(R.string.athens_info2)+"</p>";
         TextView textView= findViewById(R.id.athens_infoTextView);
