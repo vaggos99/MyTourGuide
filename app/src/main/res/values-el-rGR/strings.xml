@@ -9,6 +9,7 @@
     <string name="normal">Προεπιλογή</string>
     <string name="google_login">Συνδέσου με Google</string>
     <string name="logout">Αποσύνδεση</string>
+    <string name="login">Σύνδεση</string>
     <string name="profile">Προφίλ</string>
     <string name="start">Εκκίνηση</string>
     <string name="map">Χάρτης</string>

@@ -4,6 +4,7 @@
     <string name="fb_login_protocol_scheme">fb1616969582026440</string>
 
     <string name="google_login">Sign in with Google</string>
+    <string name="login">Log in</string>
     <string name="logout">Log out</string>
     <string name="profile">Profile</string>
     <string name="start">Start</string>

@@ -53,7 +53,7 @@ public class MyDestinationsViewModel extends ViewModel {
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Destination destination = dataSnapshot.getValue(Destination.class);
-                    System.out.println(dataSnapshot.getKey());
+                    //System.out.println(dataSnapshot.getKey());
                     if (distance >= 1 && my_location != null) {
                         float[] resultArray = new float[99];
                         Location.distanceBetween(my_location.getLatitude(), my_location.getLongitude(), destination.getLocation().getLatitude(), destination.getLocation().getLongitude(), resultArray);
@@ -109,7 +109,7 @@ public class MyDestinationsViewModel extends ViewModel {
                     }
                 } else
                     destinations.postValue(dest);
-                System.out.println(scores);
+                //System.out.println(scores);
 
             }
 

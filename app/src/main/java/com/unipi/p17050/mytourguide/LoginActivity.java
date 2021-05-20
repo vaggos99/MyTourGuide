@@ -9,12 +9,15 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.Button;
+
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -24,30 +27,31 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
-import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
-public class LoginActivity extends AppCompatActivity {
 
+import com.google.firebase.auth.GoogleAuthProvider;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class LoginActivity extends AppCompatActivity {
+    private final String TAG = this.getClass().getSimpleName();
     private  final  int RC_GOOGLE_SIGN_IN=120;
     private  final  int RC_FACEBOOK_SIGN_IN=120;
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
     private CallbackManager mCallbackManager;
-    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
 
         // Initialize Google Login button
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -65,24 +69,36 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         // Initialize Facebook Login button
+
         mCallbackManager = CallbackManager.Factory.create();
-        LoginButton loginButton = findViewById(R.id.login_button_fb);
-        loginButton.setPermissions("email", "public_profile");
-        loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                Log.d("LoginActivity", "facebook:onSuccess:" + loginResult);
-                handleFacebookAccessToken(loginResult.getAccessToken());
-            }
 
-            @Override
-            public void onCancel() {
-                Log.d("LoginActivity", "facebook:onCancel");
-            }
+        LoginManager.getInstance().registerCallback(mCallbackManager,
+                new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        Log.d(TAG+"Success", "Login");
+                        handleFacebookAccessToken(loginResult.getAccessToken());
+                    }
 
+                    @Override
+                    public void onCancel() {
+                        Log.d(TAG,"onCancel");
+                    }
+
+                    @Override
+                    public void onError(FacebookException exception) {
+                        Log.d(TAG,"onError");
+                    }
+                });
+
+
+        findViewById(R.id.login_button_fb).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onError(FacebookException error) {
-                Log.d("LoginActivity", "facebook:onError", error);
+            public void onClick(View view) {
+                List<String> permissions=new ArrayList<>();
+                permissions.add("email");
+                permissions.add("public_profile");
+                LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this,permissions);
             }
         });
     }
@@ -124,9 +140,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("LoginActivity", "signInWithCredential:success");
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putString("login_type","google");
-                            editor.apply();
+
                             upadateUI();
 
                         } else {
@@ -152,9 +166,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("LoginActivity", "signInWithCredential:success");
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putString("login_type","facebook");
-                            editor.apply();
+
                             upadateUI();
 
                         } else {

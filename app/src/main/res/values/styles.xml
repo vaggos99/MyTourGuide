@@ -8,8 +8,14 @@
     <style name="HomeButton" parent="Widget.AppCompat.Button">
          <item name="android:radius">8dp</item>
         <item name="android:paddingTop">10dp</item>
-        <item name="backgroundTint">@color/home_button_color</item>
-        <item name="android:textColor">@color/black</item>
+        <item name="backgroundTint">@color/secondaryDarkColor</item>
+
+    </style>
+    <style name="FbLoginButton">
+        <item name="android:radius">8dp</item>
+       <item name="fontFamily">@font/allerta</item>
+        <item name="backgroundTint">@color/primaryDarkColor</item>
+
     </style>
     <style name="DestinationsRV" >
         <item name="android:textColor">@color/black</item>

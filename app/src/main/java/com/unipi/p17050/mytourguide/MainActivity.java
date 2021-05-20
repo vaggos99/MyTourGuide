@@ -46,9 +46,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private String TAG_MY_FRAGMENT;
-    private SharedPreferences sharedPreferences;
     private BottomNavigationView bnv;
-    private static final String TAG = "MainActivity";
+    private final String TAG = this.getClass().getSimpleName();
     private static final int ERROR_DIALOG_REQUEST = 9001;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private Fragment selectedFragment = null;
@@ -64,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("destinations");
         mDatabase.keepSynced(true);
         getLocationPermission();
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         bnv = findViewById(R.id.bottom_navigation);
         bnv.setOnNavigationItemSelectedListener(navListener);
         ProfilesViewModel viewModel = new ViewModelProvider(this).get(ProfilesViewModel.class);
@@ -100,10 +98,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.log_out:
-                String login_type = sharedPreferences.getString("login_type", null);
+
                 FirebaseAuth.getInstance().signOut();
-                if (login_type.equals("facebook"))
-                    LoginManager.getInstance().logOut();
                 logout();
 
         }

@@ -40,7 +40,7 @@ public class Jaccard {
                 intersect++;
             union++;
         }
-        System.out.println(intersect + " " + union);
+        //System.out.println(intersect + " " + union);
         return intersect / union;
 
 
