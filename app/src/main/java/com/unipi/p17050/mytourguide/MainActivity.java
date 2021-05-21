@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int ERROR_DIALOG_REQUEST = 9001;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private Fragment selectedFragment = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,16 +67,15 @@ public class MainActivity extends AppCompatActivity {
         bnv = findViewById(R.id.bottom_navigation);
         bnv.setOnNavigationItemSelectedListener(navListener);
         ProfilesViewModel viewModel = new ViewModelProvider(this).get(ProfilesViewModel.class);
-        if(user!=null)
+        if (user != null)
             viewModel.getProfile();
         if (savedInstanceState == null) {
-            selectedFragment=new HomeFragment();
-            TAG_MY_FRAGMENT="home";
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment,TAG_MY_FRAGMENT).commit();
-        }
-        else{
-            TAG_MY_FRAGMENT=savedInstanceState.getString("TAG_MY_FRAGMENT","home");
-            selectedFragment =  getSupportFragmentManager().findFragmentByTag(TAG_MY_FRAGMENT);
+            selectedFragment = new HomeFragment();
+            TAG_MY_FRAGMENT = "home";
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment, TAG_MY_FRAGMENT).commit();
+        } else {
+            TAG_MY_FRAGMENT = savedInstanceState.getString("TAG_MY_FRAGMENT", "home");
+            selectedFragment = getSupportFragmentManager().findFragmentByTag(TAG_MY_FRAGMENT);
         }
 
     }
@@ -98,9 +98,17 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.log_out:
-
-                FirebaseAuth.getInstance().signOut();
-                logout();
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if ( user.isAnonymous()) {
+                    Log.d(TAG,"Anonymous user");
+                    DatabaseReference database = FirebaseDatabase.getInstance().getReference().child("Profiles").child(user.getUid());
+                    database.removeValue();
+                    user.delete();
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else
+                    logout();
 
         }
 
@@ -145,25 +153,25 @@ public class MainActivity extends AppCompatActivity {
 
         switch (id) {
             case R.id.home:
-                TAG_MY_FRAGMENT="home";
+                TAG_MY_FRAGMENT = "home";
                 selectedFragment = new HomeFragment();
                 break;
             case R.id.profile:
-                TAG_MY_FRAGMENT="profile";
+                TAG_MY_FRAGMENT = "profile";
                 selectedFragment = new ProfileFragment();
                 break;
             case R.id.start:
-                TAG_MY_FRAGMENT="guide";
+                TAG_MY_FRAGMENT = "guide";
                 selectedFragment = new GuideFragment();
                 break;
             case R.id.map:
-                if(isServicesOk()) {
+                if (isServicesOk()) {
                     TAG_MY_FRAGMENT = "map";
                     selectedFragment = new MapFragment();
                 }
                 break;
         }
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment,TAG_MY_FRAGMENT).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment, TAG_MY_FRAGMENT).commit();
 
     }
 
@@ -180,6 +188,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void logout() {
+
+
         FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         startActivity(intent);
