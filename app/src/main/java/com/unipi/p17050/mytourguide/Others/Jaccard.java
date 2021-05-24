@@ -1,5 +1,7 @@
 package com.unipi.p17050.mytourguide.Others;
 
+import android.util.Log;
+
 import com.unipi.p17050.mytourguide.Models.Destination;
 import com.unipi.p17050.mytourguide.Models.Profile;
 
@@ -23,7 +25,7 @@ public class Jaccard {
             intersect++;
             union ++;
         } else if (!profile.getTransport().equals("Undefined"))
-            union +=transport_list.size();
+            union +=2;
         else{
             union+=transport_list.size();
             intersect+=transport_list.size();
@@ -40,10 +42,18 @@ public class Jaccard {
                 intersect++;
             union++;
         }
-        //System.out.println(intersect + " " + union);
+
+        if(profile.getAge_group().equals("Teen/Adult") && !profile.isChildren()){
+            if(destination.isNature()) {
+                intersect++;
+                union++;
+            }
+
+        }
+        Log.d("Jaccard intersect",String.valueOf(intersect ));
+        Log.d("Jaccard union",String.valueOf(union ));
+        Log.d("Jaccard score",String.valueOf(intersect / union));
         return intersect / union;
-
-
     }
 
 
@@ -53,12 +63,11 @@ public class Jaccard {
         Set<String> set = new HashSet<>();
         set.addAll(list1);
         set.addAll(list2);
-        System.out.println(set);
+        Log.d("Jaccard union of interests",String.valueOf(set));
         return new ArrayList<>(set).size();
     }
 
     private static double getIntersectOfLists(List<String> list1, List<String> list2) {
-
         if (list1.size() == 0)
             return 0;
         list1.retainAll(list2);

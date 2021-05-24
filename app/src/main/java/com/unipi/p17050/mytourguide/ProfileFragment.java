@@ -61,8 +61,6 @@ public class ProfileFragment extends Fragment {
     private View root;
     private Button culture_b, sport_b, religion_b, strolling_b;
     private SwitchMaterial switcher;
-    private FusedLocationProviderClient mFusedclient;
-    private LocationCallback mLocationCallback;
     private AutoCompleteTextView age_choices,transport_choices;
     private ExpandableLayout c_expandableLayout, e_expandableLayout, s_expandableLayout, r_expandableLayout;
     private Profile profile;
@@ -70,7 +68,7 @@ public class ProfileFragment extends Fragment {
     private MaterialCheckBox has_children,has_pushchair;
     private ProfilesViewModel viewModel;
     private Chip museum_chip, archaeological_chip, stadium_chip, sports_chip, churches_chip, monastery_chip, strolling_chip, shopping_chip, theater_chip, dining_chip;
-    private  LocationManager manager ;
+
 
     @Override
     public void onResume() {
@@ -88,15 +86,11 @@ public class ProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         root = inflater.inflate(R.layout.fragment_profile, container, false);
         viewModel = new ViewModelProvider(requireActivity()).get(ProfilesViewModel.class);
-        mFusedclient = LocationServices.getFusedLocationProviderClient(getActivity());
-        manager = (LocationManager) getActivity(). getSystemService(Context. LOCATION_SERVICE);
+
+        LocationManager manager = (LocationManager) getActivity(). getSystemService(Context. LOCATION_SERVICE);
         if(isLocationPermissionGranded()){
-            if(!viewModel.isShown() && !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) &&viewModel.getLocation().getValue()==null){
-                buildAlertMessageNoGps(getString(R.string.gps_suggest));
-                viewModel.setShown(true);
-            }
-            else if(manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) && viewModel.getLocation().getValue()==null){
-                getLocation();
+             if(manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) && viewModel.getLocation().getValue()==null){
+                 ((MainActivity)getActivity()).getLocation();
             }
         }
         initializeExpendables();
@@ -110,97 +104,91 @@ public class ProfileFragment extends Fragment {
 
 
 
-        viewModel.getProfile().observe(getViewLifecycleOwner(), new Observer<Profile>() {
-            @Override
-            public void onChanged(Profile prof) {
-                Log.d(TAG, "profile changed");
-                profile = prof;
-                for (String interest : profile.getInterests()) {
-                    switch (interest) {
-                        case "museums":
-                            museum_chip.setSelected(true);
-                            museum_chip.setChecked(true);
-                            break;
-                        case "monument":
-                            archaeological_chip.setSelected(true);
-                            archaeological_chip.setChecked(true);
-                            break;
-                        case "stadiums":
-                            stadium_chip.setSelected(true);
-                            stadium_chip.setChecked(true);
-                            break;
-                        case "sports":
-                            sports_chip.setSelected(true);
-                            sports_chip.setChecked(true);
-                            break;
-                        case "churches":
-                            churches_chip.setSelected(true);
-                            churches_chip.setChecked(true);
-                            break;
-                        case "monasteries":
-                            monastery_chip.setSelected(true);
-                            monastery_chip.setChecked(true);
-                            break;
-                        case "strolling":
-                            strolling_chip.setSelected(true);
-                            strolling_chip.setChecked(true);
-                            break;
-                        case "shopping":
-                            shopping_chip.setSelected(true);
-                            shopping_chip.setChecked(true);
-                            break;
-                        case "theater":
-                            theater_chip.setSelected(true);
-                            theater_chip.setChecked(true);
-                            break;
-                        case "coffee/dining":
-                            dining_chip.setSelected(true);
-                            dining_chip.setChecked(true);
-                            break;
-                    }
+        viewModel.getProfile().observe(getViewLifecycleOwner(), prof -> {
+            Log.d(TAG, "profile changed");
+            profile = prof;
+            for (String interest : profile.getInterests()) {
+                switch (interest) {
+                    case "museums":
+                        museum_chip.setSelected(true);
+                        museum_chip.setChecked(true);
+                        break;
+                    case "monument":
+                        archaeological_chip.setSelected(true);
+                        archaeological_chip.setChecked(true);
+                        break;
+                    case "stadiums":
+                        stadium_chip.setSelected(true);
+                        stadium_chip.setChecked(true);
+                        break;
+                    case "sports":
+                        sports_chip.setSelected(true);
+                        sports_chip.setChecked(true);
+                        break;
+                    case "churches":
+                        churches_chip.setSelected(true);
+                        churches_chip.setChecked(true);
+                        break;
+                    case "monasteries":
+                        monastery_chip.setSelected(true);
+                        monastery_chip.setChecked(true);
+                        break;
+                    case "strolling":
+                        strolling_chip.setSelected(true);
+                        strolling_chip.setChecked(true);
+                        break;
+                    case "shopping":
+                        shopping_chip.setSelected(true);
+                        shopping_chip.setChecked(true);
+                        break;
+                    case "theater":
+                        theater_chip.setSelected(true);
+                        theater_chip.setChecked(true);
+                        break;
+                    case "coffee/dining":
+                        dining_chip.setSelected(true);
+                        dining_chip.setChecked(true);
+                        break;
                 }
-                switch (profile.getAge_group()) {
-                    case "Teen/Adult":
-                        age_choices.setText(getResources().getStringArray(R.array.age_class_array)[1], false);
-                        break;
-                    case "Middle-aged":
-                        age_choices.setText(getResources().getStringArray(R.array.age_class_array)[2], false);
-                        break;
-                    case "Elder":
-                        age_choices.setText(getResources().getStringArray(R.array.age_class_array)[3], false);
-                        break;
-                    default:
-                        age_choices.setText(getResources().getStringArray(R.array.age_class_array)[0], false);
-                }
-                switch (profile.getTransport()) {
-                    case "Car":
-                        transport_choices.setText(getResources().getStringArray(R.array.transport_class_array)[1], false);
-                        break;
-                    case "Means of transport":
-                        transport_choices.setText(getResources().getStringArray(R.array.transport_class_array)[2], false);
-                        break;
-                    default:
-                        transport_choices.setText(getResources().getStringArray(R.array.transport_class_array)[0], false);
-                }
-                has_children.setChecked(profile.isChildren());
-                if(profile.isChildren()){
-                    has_pushchair.setVisibility(View.VISIBLE);
-                    has_pushchair.setChecked(profile.isPushchair());
-                }
+            }
+            switch (profile.getAge_group()) {
+                case "Teen/Adult":
+                    age_choices.setText(getResources().getStringArray(R.array.age_class_array)[1], false);
+                    break;
+                case "Middle-aged":
+                    age_choices.setText(getResources().getStringArray(R.array.age_class_array)[2], false);
+                    break;
+                case "Elder":
+                    age_choices.setText(getResources().getStringArray(R.array.age_class_array)[3], false);
+                    break;
+                default:
+                    age_choices.setText(getResources().getStringArray(R.array.age_class_array)[0], false);
+            }
+            switch (profile.getTransport()) {
+                case "Car":
+                    transport_choices.setText(getResources().getStringArray(R.array.transport_class_array)[1], false);
+                    break;
+                case "Means of transport":
+                    transport_choices.setText(getResources().getStringArray(R.array.transport_class_array)[2], false);
+                    break;
+                default:
+                    transport_choices.setText(getResources().getStringArray(R.array.transport_class_array)[0], false);
+            }
+            has_children.setChecked(profile.isChildren());
+            if(profile.isChildren()){
+                has_pushchair.setVisibility(View.VISIBLE);
+                has_pushchair.setChecked(profile.isPushchair());
             }
         });
 
-        viewModel.getDistance().observe(getViewLifecycleOwner(), new Observer<Float>() {
-            @Override
-            public void onChanged(Float distance) {
-                if (distance < 1) {
-                    switcher.setChecked(false);
-                    slider.setEnabled(false);
-                } else {
-                    switcher.setChecked(true);
-                    slider.setEnabled(true);
-                    slider.setValue(distance);
-                }
+        viewModel.getDistance().observe(getViewLifecycleOwner(), distance -> {
+            if (distance < 1) {
+                switcher.setChecked(false);
+                slider.setEnabled(false);
+            } else {
+                switcher.setChecked(true);
+                slider.setEnabled(true);
+                slider.setValue(distance);
             }
         });
         viewModel.getLocation().observe(getViewLifecycleOwner(),my_location ->{
@@ -210,24 +198,21 @@ public class ProfileFragment extends Fragment {
 
             }
         });
-        age_choices.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                switch (position) {
-                    case 1:
-                        profile.setAge_group("Teen/Adult");
-                        break;
-                    case 2:
-                        profile.setAge_group("Middle-aged");
-                        break;
-                    case 3:
-                        profile.setAge_group("Elder");
-                        break;
-                    default:
-                        profile.setAge_group("Undefined");
-                }
-                viewModel.setProfile(profile);
+        age_choices.setOnItemClickListener((parent, view, position, id) -> {
+            switch (position) {
+                case 1:
+                    profile.setAge_group("Teen/Adult");
+                    break;
+                case 2:
+                    profile.setAge_group("Middle-aged");
+                    break;
+                case 3:
+                    profile.setAge_group("Elder");
+                    break;
+                default:
+                    profile.setAge_group("Undefined");
             }
+            viewModel.setProfile(profile);
         });
 
         transport_choices.setOnItemClickListener((parent, view, position, id) -> {
@@ -244,28 +229,25 @@ public class ProfileFragment extends Fragment {
             viewModel.setProfile(profile);
         });
 
-        switcher.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (switcher.isChecked()) {
-                    if (isLocationPermissionGranded()) {
-                        if (viewModel.getLocation().getValue()==null && !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
-                            buildAlertMessageNoGps(getString(R.string.gps_needed));
-                        }
-                        else
-                            getLocation();
+        switcher.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (switcher.isChecked()) {
+                if (isLocationPermissionGranded()) {
+                    if (viewModel.getLocation().getValue()==null && !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+                        buildAlertMessageNoGps(getString(R.string.gps_needed));
                     }
-                    else {
-                        Toast.makeText(getContext(), getString(R.string.gps_perrmissions), Toast.LENGTH_SHORT).show();
-                        switcher.setChecked(false);
-                    }
-                } else {
-                    slider.setEnabled(false);
-                    slider.setValue(1);
-                    viewModel.setDistance(-1);
+                    else
+                        ((MainActivity)getActivity()).getLocation();
                 }
-
+                else {
+                    Toast.makeText(getContext(), getString(R.string.gps_perrmissions), Toast.LENGTH_SHORT).show();
+                    switcher.setChecked(false);
+                }
+            } else {
+                slider.setEnabled(false);
+                slider.setValue(1);
+                viewModel.setDistance(-1);
             }
+
         });
 
         slider.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
@@ -281,27 +263,21 @@ public class ProfileFragment extends Fragment {
 
         });
 
-        has_children.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                profile.setChildren(((CheckBox) v).isChecked());
-                if(((CheckBox) v).isChecked())
-                    has_pushchair.setVisibility(View.VISIBLE);
-                else {
-                    has_pushchair.setVisibility(View.GONE);
-                    has_pushchair.setChecked(false);
-                    profile.setPushchair(false);
-                }
-                viewModel.setProfile(profile);
+        has_children.setOnClickListener(v -> {
+            profile.setChildren(((CheckBox) v).isChecked());
+            if(((CheckBox) v).isChecked())
+                has_pushchair.setVisibility(View.VISIBLE);
+            else {
+                has_pushchair.setVisibility(View.GONE);
+                has_pushchair.setChecked(false);
+                profile.setPushchair(false);
             }
+            viewModel.setProfile(profile);
         });
 
-        has_pushchair.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                profile.setPushchair(((CheckBox) v).isChecked());
-                viewModel.setProfile(profile);
-            }
+        has_pushchair.setOnClickListener(v -> {
+            profile.setPushchair(((CheckBox) v).isChecked());
+            viewModel.setProfile(profile);
         });
         return root;
     }
@@ -309,35 +285,28 @@ public class ProfileFragment extends Fragment {
 
 
     private void chipClicked(Chip chip, String value) {
-        chip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (chip.isSelected()) {
-                    chip.setSelected(false);
-                    chip.setChecked(false);
-                    profile.removeInterest(value);
-                } else {
-                    chip.setSelected(true);
-                    chip.setChecked(true);
-                    profile.addInterest(value);
-                }
-
-
-                viewModel.setProfile(profile);
+        chip.setOnClickListener(v -> {
+            if (chip.isSelected()) {
+                chip.setSelected(false);
+                chip.setChecked(false);
+                profile.removeInterest(value);
+            } else {
+                chip.setSelected(true);
+                chip.setChecked(true);
+                profile.addInterest(value);
             }
 
+
+            viewModel.setProfile(profile);
         });
     }
 
     private void buttonClicked(Button button, ExpandableLayout expandableLayout) {
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                button.setSelected(!button.isSelected());
+        button.setOnClickListener(v -> {
+            button.setSelected(!button.isSelected());
 
-                expandableLayout.toggle();
-            }
+            expandableLayout.toggle();
         });
     }
 
@@ -394,44 +363,6 @@ public class ProfileFragment extends Fragment {
 
 
 
-    @SuppressLint("MissingPermission")
-    private void getLocation() {
-
-        mFusedclient.getLastLocation()
-                .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        // Got last known location. In some rare situations this can be null.
-                        if (location != null) {
-                            // Logic to handle location object
-                            My_Location loc = new My_Location(location.getLatitude(),location.getLongitude());
-                            viewModel.setLocation(loc);
-                        } else {
-                            final LocationRequest locationRequest = LocationRequest.create();
-                            locationRequest.setExpirationDuration(30000);
-                            locationRequest.setInterval(10000);
-                            locationRequest.setFastestInterval(5000);
-                            locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                            mLocationCallback = new LocationCallback() {
-                                @Override
-                                public void onLocationResult(LocationResult locationResult) {
-                                    super.onLocationResult(locationResult);
-                                    if (locationResult == null) {
-                                        return;
-                                    }
-                                    Location mLastKnownLocation = locationResult.getLastLocation();
-                                    My_Location loc =new My_Location(mLastKnownLocation.getLatitude(),mLastKnownLocation.getLongitude());
-                                    viewModel.setLocation(loc);
-                                    Log.d(TAG,"Location found remove updates");
-                                    mFusedclient.removeLocationUpdates(mLocationCallback);
-                                }
-                            };
-                            Log.d(TAG,"Location requesting updates ");
-                            mFusedclient.requestLocationUpdates(locationRequest, mLocationCallback, null);
-                        }
-                    }
-                });
-    }
 
 
 
@@ -441,7 +372,7 @@ public class ProfileFragment extends Fragment {
                 .setCancelable(false)
                 .setPositiveButton(getString(R.string.yes), (dialog, id) -> {
                     startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                    getLocation();
+                    ((MainActivity)getActivity()).getLocation();
                 })
                 .setNegativeButton(R.string.no, (dialog, id) -> {
                     switcher.setChecked(false);

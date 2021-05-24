@@ -15,11 +15,20 @@ public class Destination {
     private String info;
     private String info_gr;
     private boolean easy_access;
+    private boolean nature;
     private String type;
     private ArrayList<String> category;
     private ArrayList<String> transport;
     private My_Location location;
     private String type_gr;
+
+    public boolean isNature() {
+        return nature;
+    }
+
+    public void setNature(boolean nature) {
+        this.nature = nature;
+    }
 
     public String getSite() {
         return site;

@@ -83,13 +83,16 @@ public class DestinationsRecyclerViewAdapter extends RecyclerView.Adapter<Destin
                 }
             }
         });
-        if (destinations.get(position).getSite() != null) {
+        if (destinations.get(position).getSite()!=null) {
             holder.infoButton.setVisibility(View.VISIBLE);
             holder.infoButton.setOnClickListener(v -> {
                 Uri uri = Uri.parse(destinations.get(position).getSite()); // missing 'http://' will cause crashed
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 context.startActivity(intent);
             });
+        }
+        else{
+            holder.infoButton.setVisibility(View.GONE);
         }
         holder.directionButton.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_VIEW,
