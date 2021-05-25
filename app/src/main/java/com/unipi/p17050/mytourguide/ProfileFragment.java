@@ -1,15 +1,16 @@
 package com.unipi.p17050.mytourguide;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 
+
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 
 import android.content.Intent;
 
 import android.content.pm.PackageManager;
-import android.location.Location;
+
 import android.location.LocationManager;
 import android.os.Bundle;
 
@@ -17,39 +18,32 @@ import androidx.annotation.NonNull;
 
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
+
 import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
+
 import android.widget.Toast;
 
 
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
-
-
-import com.google.android.gms.tasks.OnSuccessListener;
 
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.slider.Slider;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
-import com.unipi.p17050.mytourguide.Models.My_Location;
+
 import com.unipi.p17050.mytourguide.Models.Profile;
+import com.unipi.p17050.mytourguide.ViewModels.ProfileFragmentViewModel;
 import com.unipi.p17050.mytourguide.ViewModels.ProfilesViewModel;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
@@ -67,6 +61,7 @@ public class ProfileFragment extends Fragment {
     private Slider slider;
     private MaterialCheckBox has_children,has_pushchair;
     private ProfilesViewModel viewModel;
+    private ProfileFragmentViewModel pfv;
     private Chip museum_chip, archaeological_chip, stadium_chip, sports_chip, churches_chip, monastery_chip, strolling_chip, shopping_chip, theater_chip, dining_chip;
 
 
@@ -86,7 +81,7 @@ public class ProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         root = inflater.inflate(R.layout.fragment_profile, container, false);
         viewModel = new ViewModelProvider(requireActivity()).get(ProfilesViewModel.class);
-
+        pfv=new ViewModelProvider(requireActivity()).get(ProfileFragmentViewModel.class);
         LocationManager manager = (LocationManager) getActivity(). getSystemService(Context. LOCATION_SERVICE);
         if(isLocationPermissionGranded()){
              if(manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) && viewModel.getLocation().getValue()==null){
@@ -95,6 +90,7 @@ public class ProfileFragment extends Fragment {
         }
         initializeExpendables();
         initializeChips();
+        initializeInterestButtons();
         switcher = root.findViewById(R.id.enable_distance);
         slider = root.findViewById(R.id.slider);
         age_choices = root.findViewById(R.id.age_choices);
@@ -301,12 +297,26 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+    @SuppressLint("NonConstantResourceId")
     private void buttonClicked(Button button, ExpandableLayout expandableLayout) {
 
         button.setOnClickListener(v -> {
-            button.setSelected(!button.isSelected());
-
+            v.setSelected(!v.isSelected());
             expandableLayout.toggle();
+            switch(v.getId()){
+                case R.id.culture_button:
+                    pfv.setCultureButton(v.isSelected());
+                    break;
+                case R.id.religion_button:
+                    pfv.setReligionButton(v.isSelected());
+                    break;
+                case R.id.entertainment_button:
+                    pfv.setEntertainmentButton(v.isSelected());
+                    break;
+                case R.id.sport_button:
+                    pfv.setSportsButton(v.isSelected());
+                    break;
+            }
         });
     }
 
@@ -362,7 +372,16 @@ public class ProfileFragment extends Fragment {
     }
 
 
-
+    private void initializeInterestButtons(){
+        if(pfv.isCultureButton())
+            culture_b.setSelected(true);
+        if(pfv.isReligionButton())
+            religion_b.setSelected(true);
+        if(pfv.isSportsButton())
+            sport_b.setSelected(true);
+        if (pfv.isEntertainmentButton())
+            strolling_b.setSelected(true);
+    }
 
 
 

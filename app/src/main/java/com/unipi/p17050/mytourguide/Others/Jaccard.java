@@ -13,7 +13,6 @@ import java.util.Set;
 public class Jaccard {
     public static double calculate(Profile profile, Destination destination) {
 
-
         ArrayList profile_interests = new ArrayList(profile.getInterests());
         ArrayList destination_interests = new ArrayList(destination.getCategory());
         ArrayList transport_list = new ArrayList(destination.getTransport());
@@ -25,7 +24,7 @@ public class Jaccard {
             intersect++;
             union ++;
         } else if (!profile.getTransport().equals("Undefined"))
-            union +=2;
+            union ++;
         else{
             union+=transport_list.size();
             intersect+=transport_list.size();

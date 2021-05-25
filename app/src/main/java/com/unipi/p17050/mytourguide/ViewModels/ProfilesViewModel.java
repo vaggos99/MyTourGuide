@@ -22,15 +22,7 @@ public class ProfilesViewModel extends ViewModel {
     private MutableLiveData<Profile> profile;
     private MutableLiveData<My_Location> location=new MutableLiveData<>();
     private MutableLiveData<Float> distance=new MutableLiveData<>();
-    private boolean shown;
 
-    public boolean isShown() {
-        return shown;
-    }
-
-    public void setShown(boolean shown) {
-        this.shown = shown;
-    }
 
     public MutableLiveData<My_Location> getLocation() {
         return location;

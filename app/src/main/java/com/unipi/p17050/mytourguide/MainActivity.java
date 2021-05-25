@@ -68,9 +68,8 @@ public class MainActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(ProfilesViewModel.class);
         LocationManager manager = (LocationManager) this. getSystemService(Context. LOCATION_SERVICE);
         if(getLocationPermission()){
-            if(!viewModel.isShown() && !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) &&viewModel.getLocation().getValue()==null){
+            if(savedInstanceState==null && !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) &&viewModel.getLocation().getValue()==null){
                 buildAlertMessageNoGps(getString(R.string.gps_suggest));
-                viewModel.setShown(true);
             }
             else if(manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) && viewModel.getLocation().getValue()==null){
                 getLocation();
