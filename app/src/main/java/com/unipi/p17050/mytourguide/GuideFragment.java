@@ -63,9 +63,6 @@ public class GuideFragment extends Fragment {
                     setUpAdapter();
             }
         });
-
-
-
         return view;
     }
 

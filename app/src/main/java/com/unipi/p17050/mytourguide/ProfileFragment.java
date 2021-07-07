@@ -43,7 +43,6 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 
 
 import com.unipi.p17050.mytourguide.Models.Profile;
-import com.unipi.p17050.mytourguide.ViewModels.ProfileFragmentViewModel;
 import com.unipi.p17050.mytourguide.ViewModels.ProfilesViewModel;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
@@ -61,7 +60,7 @@ public class ProfileFragment extends Fragment {
     private Slider slider;
     private MaterialCheckBox has_children,has_pushchair;
     private ProfilesViewModel viewModel;
-    private ProfileFragmentViewModel pfv;
+    private boolean isCultureButton,isReligionButton,isSportsButton,isEntertainmentButton;
     private Chip museum_chip, archaeological_chip, stadium_chip, sports_chip, churches_chip, monastery_chip, strolling_chip, shopping_chip, theater_chip, dining_chip;
 
 
@@ -76,17 +75,32 @@ public class ProfileFragment extends Fragment {
     }
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("isCultureButton", isCultureButton);
+        outState.putBoolean("isReligionButton", isReligionButton);
+        outState.putBoolean("isSportsButton", isSportsButton);
+        outState.putBoolean("isEntertainmentButton", isEntertainmentButton);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         root = inflater.inflate(R.layout.fragment_profile, container, false);
         viewModel = new ViewModelProvider(requireActivity()).get(ProfilesViewModel.class);
-        pfv=new ViewModelProvider(requireActivity()).get(ProfileFragmentViewModel.class);
+
         LocationManager manager = (LocationManager) getActivity(). getSystemService(Context. LOCATION_SERVICE);
         if(isLocationPermissionGranded()){
              if(manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) && viewModel.getLocation().getValue()==null){
                  ((MainActivity)getActivity()).getLocation();
             }
+        }
+        if(savedInstanceState!=null){
+            isCultureButton=savedInstanceState.getBoolean("isCultureButton",false);
+            isReligionButton=savedInstanceState.getBoolean("isReligionButton",false);
+            isSportsButton=savedInstanceState.getBoolean("isSportsButton",false);
+            isEntertainmentButton=savedInstanceState.getBoolean("isEntertainmentButton",false);
         }
         initializeExpendables();
         initializeChips();
@@ -305,16 +319,16 @@ public class ProfileFragment extends Fragment {
             expandableLayout.toggle();
             switch(v.getId()){
                 case R.id.culture_button:
-                    pfv.setCultureButton(v.isSelected());
+                    isCultureButton=v.isSelected();
                     break;
                 case R.id.religion_button:
-                    pfv.setReligionButton(v.isSelected());
+                    isReligionButton=v.isSelected();
                     break;
                 case R.id.entertainment_button:
-                    pfv.setEntertainmentButton(v.isSelected());
+                    isEntertainmentButton=v.isSelected();
                     break;
                 case R.id.sport_button:
-                    pfv.setSportsButton(v.isSelected());
+                    isSportsButton=v.isSelected();
                     break;
             }
         });
@@ -373,13 +387,13 @@ public class ProfileFragment extends Fragment {
 
 
     private void initializeInterestButtons(){
-        if(pfv.isCultureButton())
+        if(isCultureButton)
             culture_b.setSelected(true);
-        if(pfv.isReligionButton())
+        if(isReligionButton)
             religion_b.setSelected(true);
-        if(pfv.isSportsButton())
+        if(isSportsButton)
             sport_b.setSelected(true);
-        if (pfv.isEntertainmentButton())
+        if (isEntertainmentButton)
             strolling_b.setSelected(true);
     }
 

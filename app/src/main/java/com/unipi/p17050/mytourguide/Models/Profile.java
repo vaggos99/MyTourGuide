@@ -1,14 +1,13 @@
 package com.unipi.p17050.mytourguide.Models;
 
 
-
 import java.util.ArrayList;
 
 public class Profile {
     private ArrayList<String> interests = new ArrayList<>();
-    private ArrayList<String> favorites=new ArrayList<>();
-    private String transport="Undefined";
-    private String age_group="Undefined";
+    private ArrayList<String> favorites = new ArrayList<>();
+    private String transport = "Undefined";
+    private String age_group = "Undefined";
     private boolean pushchair;
     private boolean children;
 
@@ -37,8 +36,6 @@ public class Profile {
     }
 
     public String getTransport() {
-
-
         return transport;
     }
 
@@ -56,14 +53,12 @@ public class Profile {
 
 
     public ArrayList<String> getInterests() {
-
         return interests;
     }
 
     public void setInterests(ArrayList<String> interests) {
         this.interests = interests;
     }
-
 
 
     public void addInterest(String value) {
